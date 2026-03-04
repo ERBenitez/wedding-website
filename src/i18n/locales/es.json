@@ -1,0 +1,97 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "error": "Error",
+    "success": "Éxito",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "submit": "Enviar",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión",
+    "welcome": "Bienvenido",
+    "guest": "Invitado"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "rsvp": "RSVP",
+    "brasilia": "Qué hacer en Brasilia",
+    "admin": "Admin",
+    "language": "Idioma",
+    "theme": "Tema"
+  },
+  "home": {
+    "title": "Olivia y Esteban",
+    "subtitle": "Hace mucho tiempo, en una galaxia muy, muy lejana... dos almas chocaron.",
+    "date": "Únete a nuestro viaje | 12 de diciembre de 2026",
+    "usePersonalLink": "Por favor, usa tu enlace personal para acceder a tu invitación",
+    "personalizedWelcome": "¡Bienvenido, {{name}}!",
+    "personalizedMessage": "Es un honor tenerte en nuestra celebración",
+    "viewRSVP": "Ver RSVP",
+    "viewDetails": "Ver Detalles"
+  },
+  "rsvp": {
+    "title": "Únete a la Rebelión",
+    "subtitle": "Confirma tu asistencia",
+    "greeting": "Hola, {{name}}",
+    "reservedSpots": "Lugares reservados para ti: {{count}}",
+    "willYouAttend": "¿Asistirás?",
+    "yes": "¡Sí, estaré allí!",
+    "no": "Lo siento, no podré asistir",
+    "howMany": "¿Cuántas personas asistirán?",
+    "foodRestrictions": "Restricciones alimentarias o alergias",
+    "foodRestrictionsPlaceholder": "Por favor, dinos si tienes restricciones dietéticas o alergias...",
+    "submit": "Transmitir RSVP",
+    "update": "Actualizar RSVP",
+    "successMessage": "¡Tu RSVP ha sido transmitido exitosamente!",
+    "errorMessage": "Hubo un error al transmitir tu RSVP. Por favor, inténtalo de nuevo.",
+    "alreadyResponded": "Ya has respondido a esta invitación",
+    "loginWithGoogle": "Inicia sesión con tu correo para gestionar tu RSVP",
+    "logout": "Cerrar sesión"
+  },
+  "brasilia": {
+    "title": "Descubre Brasilia",
+    "subtitle": "Explora la capital de Brasil mientras estás aquí",
+    "loadMore": "Cargar Más",
+    "categories": {
+      "all": "Todo",
+      "culture": "Cultura",
+      "nature": "Naturaleza",
+      "food": "Comida",
+      "nightlife": "Vida Nocturna"
+    }
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "subtitle": "Gestionar invitados de la boda",
+    "addGuest": "Agregar Invitado",
+    "editGuest": "Editar Invitado",
+    "deleteGuest": "Eliminar Invitado",
+    "name": "Nombre",
+    "email": "Correo",
+    "reservedSpots": "Lugares Reservados",
+    "rsvpStatus": "Estado RSVP",
+    "rsvpCount": "Conteo RSVP",
+    "language": "Idioma",
+    "actions": "Acciones",
+    "noGuests": "No se encontraron invitados",
+    "search": "Buscar invitados...",
+    "accessDenied": "Acceso Denegado",
+    "accessDeniedMessage": "No tienes permiso para acceder a esta página"
+  },
+  "errors": {
+    "503": {
+      "title": "Servicio No Disponible",
+      "message": "La Fuerza no es fuerte con este servidor en este momento. Por favor, inténtalo más tarde."
+    },
+    "418": {
+      "title": "Soy una Tetera",
+      "message": "Este servidor es una tetera, no una cafetera. El hiperimpulsor necesita más caf."
+    },
+    "guestNotFound": "Invitado no encontrado. Por favor, verifica tu enlace.",
+    "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
+  }
+}

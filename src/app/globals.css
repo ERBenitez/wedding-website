@@ -1,26 +1,187 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-star-jedi: 'Star Jedi', sans-serif;
+  --background: #f8f5f2;
+  --foreground: #1a1a1a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #1a1a1a;
+  --foreground: #f8f5f2;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  
+  body {
+    @apply font-body antialiased;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .lightsaber-divider {
+    @apply relative h-1 w-full overflow-hidden;
+  }
+  
+  .lightsaber-divider::before {
+    content: '';
+    @apply absolute left-0 top-0 h-full;
+    background: linear-gradient(90deg, transparent, #ee9b9b, #2d2f8e, transparent);
+    box-shadow: 0 0 10px #ee9b9b, 0 0 20px #2d2f8e;
+  }
+  
+  .lightsaber-divider.active::before {
+    animation: lightsaberOn 0.8s ease-out forwards;
+  }
+  
+  .star-wars-text {
+    @apply tracking-widest uppercase;
+    text-shadow: 0 0 10px rgba(238, 155, 155, 0.5);
+  }
+  
+  .holographic-card {
+    @apply relative;
+    background: linear-gradient(135deg, rgba(45, 47, 142, 0.1), rgba(238, 155, 155, 0.1));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(238, 155, 155, 0.3);
+  }
+  
+  .holographic-card::before {
+    content: '';
+    @apply absolute inset-0 rounded-lg;
+    background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
+    pointer-events: none;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
+    @apply bg-indigo text-white;
+    @apply hover:bg-indigo-light hover:shadow-lg hover:shadow-indigo/30;
+    @apply active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
+    @apply bg-pink text-white;
+    @apply hover:bg-pink-dark hover:shadow-lg hover:shadow-pink/30;
+    @apply active:scale-95;
+  }
+  
+  .btn-outline {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
+    @apply border-2 border-indigo text-indigo;
+    @apply hover:bg-indigo hover:text-white;
+    @apply active:scale-95;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border-2 transition-all duration-300;
+    @apply border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-600;
+    @apply focus:border-indigo focus:outline-none focus:ring-2 focus:ring-indigo/20;
+  }
+  
+  .input-field.error {
+    @apply border-red-500 focus:border-red-500 focus:ring-red-500/20;
+  }
+  
+  .glass-card {
+    @apply rounded-xl p-6;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .glass-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .starfield-bg {
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #2d2f8e, #ee9b9b);
+  }
+  
+  .gold-accent {
+    @apply text-gold;
+    text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+  }
+}
+
+@layer utilities {
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-indigo rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-indigo-light;
+}
+
+/* Loading screen */
+.loading-screen {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+  background-color: var(--background);
+}
+
+/* Language selector */
+.language-selector {
+  @apply relative;
+}
+
+.language-selector button {
+  @apply flex items-center gap-2 px-3 py-2 rounded-lg;
+  @apply text-sm font-medium;
+  @apply hover:bg-gray-100 dark:hover:bg-gray-800;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  @apply p-2 rounded-lg transition-all duration-300;
+  @apply hover:bg-gray-100 dark:hover:bg-gray-800;
 }

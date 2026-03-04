@@ -1,103 +1,237 @@
-import Image from "next/image";
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { getGuestByUrlCode } from '@/lib/supabase'
+import { LightsaberDivider, LightsaberLoading } from '@/components/LightsaberDivider'
+import { Calendar, MapPin, Heart } from 'lucide-react'
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { t, i18n } = useTranslation()
+  const searchParams = useSearchParams()
+  const urlCode = searchParams.get('code')
+  
+  const [guest, setGuest] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useEffect(() => {
+    async function loadGuest() {
+      if (urlCode) {
+        try {
+          const guestData = await getGuestByUrlCode(urlCode)
+          if (guestData) {
+            setGuest(guestData)
+            // Update language if guest has a preferred language
+            if (guestData.language && guestData.language !== i18n.language) {
+              i18n.changeLanguage(guestData.language)
+            }
+          } else {
+            setError('guestNotFound')
+          }
+        } catch (err) {
+          console.error('Error loading guest:', err)
+          setError('generic')
+        }
+      }
+      setLoading(false)
+    }
+
+    loadGuest()
+  }, [urlCode, i18n])
+
+  if (loading) {
+    return <LightsaberLoading onComplete={() => {}} />
+  }
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo/10 via-transparent to-pink/10 dark:from-indigo/20 dark:to-pink/20" />
+        
+        {/* Starfield effect */}
+        <div className="absolute inset-0 starfield-bg opacity-30" />
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest uppercase">
+              A long time ago in a galaxy far, far away...
+            </p>
+            
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-gradient font-display tracking-wider">
+              {t('home.title')}
+            </h1>
+            
+            <LightsaberDivider color="pink" delay={500} className="my-8" />
+            
+            <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-8 font-accent">
+              {t('home.subtitle')}
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-indigo dark:text-pink" />
+                <span>December 12, 2026</span>
+              </div>
+              <span className="hidden sm:inline">|</span>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-indigo dark:text-pink" />
+                <span>Brasilia, Brazil</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* Floating hearts decoration */}
+        <motion.div
+          className="absolute top-20 left-10 text-pink/30"
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 4, repeat: Infinity }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <Heart className="w-8 h-8" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-20 right-10 text-indigo/30"
+          animate={{ y: [0, 20, 0] }}
+          transition={{ duration: 5, repeat: Infinity }}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <Heart className="w-10 h-10" />
+        </motion.div>
+      </section>
+
+      {/* Personalized or Public Content */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          {guest ? (
+            // Personalized view
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="glass-card text-center"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-indigo dark:text-pink">
+                {t('home.personalizedWelcome', { name: guest.name })}
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+                {t('home.personalizedMessage')}
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href={`/rsvp?code=${urlCode}`}
+                  className="btn-primary inline-flex items-center justify-center gap-2"
+                >
+                  <Heart className="w-5 h-5" />
+                  {t('home.viewRSVP')}
+                </Link>
+              </div>
+
+              <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <p className="text-sm text-gray-500 dark:text-gray-500">
+                  Reserved spots: <span className="font-bold text-indigo dark:text-pink">{guest.reserved_spots}</span>
+                </p>
+                {guest.rsvp !== null && (
+                  <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+                    RSVP Status: {' '}
+                    <span className={`font-bold ${guest.rsvp ? 'text-green-500' : 'text-red-500'}`}>
+                      {guest.rsvp ? 'Confirmed' : 'Declined'}
+                    </span>
+                  </p>
+                )}
+              </div>
+            </motion.div>
+          ) : (
+            // Public view
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="glass-card text-center"
+            >
+              {error ? (
+                <div className="text-red-500 mb-4">
+                  {t(`errors.${error}`)}
+                </div>
+              ) : null}
+              
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 text-indigo dark:text-pink">
+                Welcome to Our Wedding
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                {t('home.usePersonalLink')}
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/rsvp"
+                  className="btn-outline inline-flex items-center justify-center gap-2"
+                >
+                  {t('rsvp.loginWithGoogle')}
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      {/* Wedding Details */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent via-indigo/5 to-transparent">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-indigo dark:text-pink">
+            The Details
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Calendar,
+                title: 'Date & Time',
+                content: 'December 12, 2026\n4:00 PM',
+              },
+              {
+                icon: MapPin,
+                title: 'Location',
+                content: 'The Galactic Gardens\nBrasilia, Brazil',
+              },
+              {
+                icon: Heart,
+                title: 'Dress Code',
+                content: 'Star Wars Elegant\n(Black Tie Optional)',
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="glass-card text-center hover:scale-105 transition-transform duration-300"
+              >
+                <div className="flex justify-center mb-4">
+                  <div className="p-4 rounded-full bg-indigo/10 dark:bg-pink/10">
+                    <item.icon className="w-8 h-8 text-indigo dark:text-pink" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-gray-200">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                  {item.content}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
-  );
+  )
 }

@@ -1,0 +1,97 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "error": "Erro",
+    "success": "Sucesso",
+    "back": "Voltar",
+    "next": "Próximo",
+    "submit": "Enviar",
+    "logout": "Sair",
+    "login": "Entrar",
+    "welcome": "Bem-vindo",
+    "guest": "Convidado"
+  },
+  "navigation": {
+    "home": "Início",
+    "rsvp": "RSVP",
+    "brasilia": "O que fazer em Brasília",
+    "admin": "Admin",
+    "language": "Idioma",
+    "theme": "Tema"
+  },
+  "home": {
+    "title": "Olivia e Esteban",
+    "subtitle": "Há muito tempo, em uma galáxia muito, muito distante... duas almas colidiram.",
+    "date": "Junte-se à nossa jornada | 12 de dezembro de 2026",
+    "usePersonalLink": "Por favor, use seu link pessoal para acessar seu convite",
+    "personalizedWelcome": "Bem-vindo, {{name}}!",
+    "personalizedMessage": "É uma honra tê-lo em nossa celebração",
+    "viewRSVP": "Ver RSVP",
+    "viewDetails": "Ver Detalhes"
+  },
+  "rsvp": {
+    "title": "Junte-se à Rebelião",
+    "subtitle": "Confirme sua presença",
+    "greeting": "Olá, {{name}}",
+    "reservedSpots": "Lugares reservados para você: {{count}}",
+    "willYouAttend": "Você vai comparecer?",
+    "yes": "Sim, estarei lá!",
+    "no": "Desculpe, não poderei ir",
+    "howMany": "Quantas pessoas vão comparecer?",
+    "foodRestrictions": "Restrições alimentares ou alergias",
+    "foodRestrictionsPlaceholder": "Por favor, nos informe sobre restrições dietéticas ou alergias...",
+    "submit": "Transmitir RSVP",
+    "update": "Atualizar RSVP",
+    "successMessage": "Seu RSVP foi transmitido com sucesso!",
+    "errorMessage": "Houve um erro ao transmitir seu RSVP. Por favor, tente novamente.",
+    "alreadyResponded": "Você já respondeu a este convite",
+    "loginWithGoogle": "Entre com o seu email para gerenciar seu RSVP",
+    "logout": "Sair"
+  },
+  "brasilia": {
+    "title": "Descubra Brasília",
+    "subtitle": "Explore a capital do Brasil enquanto estiver aqui",
+    "loadMore": "Carregar Mais",
+    "categories": {
+      "all": "Tudo",
+      "culture": "Cultura",
+      "nature": "Natureza",
+      "food": "Comida",
+      "nightlife": "Vida Noturna"
+    }
+  },
+  "admin": {
+    "title": "Painel de Administração",
+    "subtitle": "Gerenciar convidados do casamento",
+    "addGuest": "Adicionar Convidado",
+    "editGuest": "Editar Convidado",
+    "deleteGuest": "Excluir Convidado",
+    "name": "Nome",
+    "email": "Email",
+    "reservedSpots": "Lugares Reservados",
+    "rsvpStatus": "Status RSVP",
+    "rsvpCount": "Contagem RSVP",
+    "language": "Idioma",
+    "actions": "Ações",
+    "noGuests": "Nenhum convidado encontrado",
+    "search": "Buscar convidados...",
+    "accessDenied": "Acesso Negado",
+    "accessDeniedMessage": "Você não tem permissão para acessar esta página"
+  },
+  "errors": {
+    "503": {
+      "title": "Serviço Indisponível",
+      "message": "A Força não está forte com este servidor no momento. Por favor, tente novamente mais tarde."
+    },
+    "418": {
+      "title": "Eu sou um Bule",
+      "message": "Este servidor é um bule, não uma cafeteira. O hiperdrive precisa de mais caf."
+    },
+    "guestNotFound": "Convidado não encontrado. Por favor, verifique seu link.",
+    "generic": "Algo deu errado. Por favor, tente novamente."
+  }
+}
