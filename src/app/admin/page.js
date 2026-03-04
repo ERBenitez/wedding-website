@@ -139,6 +139,23 @@ export default function Admin() {
     (guest.email && guest.email.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
+  const totalInvites = guests.length
+
+const totalSeats = guests.reduce((sum, g) => sum + (g.reserved_spots ?? 0), 0)
+
+const confirmedSeats = guests.reduce(
+  (sum, g) => sum + (g.rsvp === true ? (g.rsvp_count ?? 0) : 0),
+  0
+)
+
+const declinedInvites = guests.filter(g => g.rsvp === false).length
+
+// Pending seats = reserved seats for invites that haven’t responded yet
+const pendingSeats = guests.reduce(
+  (sum, g) => sum + (g.rsvp === null ? (g.reserved_spots ?? 0) : 0),
+  0
+)
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -419,36 +436,36 @@ export default function Admin() {
 
         {/* Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          <div className="glass-card text-center">
-            <p className="text-3xl font-bold text-indigo dark:text-pink">
-              {guests.length}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total Guests</p>
-          </div>
-          <div className="glass-card text-center">
-            <p className="text-3xl font-bold text-green-600">
-              {guests.filter(g => g.rsvp === true).length}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Confirmed</p>
-          </div>
-          <div className="glass-card text-center">
-            <p className="text-3xl font-bold text-red-500">
-              {guests.filter(g => g.rsvp === false).length}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Declined</p>
-          </div>
-          <div className="glass-card text-center">
-            <p className="text-3xl font-bold text-gold">
-              {guests.filter(g => g.rsvp === null).length}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Pending</p>
-          </div>
-        </motion.div>
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.3 }}
+  className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+>
+  <div className="glass-card text-center">
+    <p className="text-3xl font-bold text-indigo dark:text-pink">{totalInvites}</p>
+    <p className="text-sm text-gray-600 dark:text-gray-400">Invites</p>
+  </div>
+
+  <div className="glass-card text-center">
+    <p className="text-3xl font-bold text-red-600 dark:text-red-500">{declinedInvites}</p>
+    <p className="text-sm text-gray-600 dark:text-gray-400">Declined Invites</p>
+  </div>
+
+  <div className="glass-card text-center">
+    <p className="text-3xl font-bold text-indigo dark:text-pink">{totalSeats}</p>
+    <p className="text-sm text-gray-600 dark:text-gray-400">Total Guests</p>
+  </div>
+
+  <div className="glass-card text-center">
+    <p className="text-3xl font-bold text-green-600">{confirmedSeats}</p>
+    <p className="text-sm text-gray-600 dark:text-gray-400">Confirmed Guests</p>
+  </div>
+
+  <div className="glass-card text-center">
+    <p className="text-3xl font-bold text-gold">{pendingSeats}</p>
+    <p className="text-sm text-gray-600 dark:text-gray-400">Pending Guests</p>
+  </div>
+</motion.div>
       </div>
 
       {/* Add/Edit Modal */}
