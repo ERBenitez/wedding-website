@@ -1,50 +1,63 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { getGuestByUrlCode } from '@/lib/supabase'
-import { LightsaberDivider, LightsaberLoading } from '@/components/LightsaberDivider'
-import { Calendar, MapPin, Heart } from 'lucide-react'
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { getGuestByUrlCode } from "@/lib/supabase";
+import {
+  LightsaberDivider,
+  LightsaberLoading,
+} from "@/components/LightsaberDivider";
+import { Calendar, MapPin, Heart } from "lucide-react";
 
 export default function Home() {
-  const { t, i18n } = useTranslation()
-  const searchParams = useSearchParams()
-  const urlCode = searchParams.get('code')
-  
-  const [guest, setGuest] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { t, i18n } = useTranslation();
+  const searchParams = useSearchParams();
+
+  const rawCode = searchParams.get("code");
+
+  // Persist
+  const urlCode = (() => {
+    if (rawCode) {
+      sessionStorage.setItem("guestCode", rawCode);
+      return rawCode;
+    }
+    return sessionStorage.getItem("guestCode");
+  })();
+
+  const [guest, setGuest] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function loadGuest() {
       if (urlCode) {
         try {
-          const guestData = await getGuestByUrlCode(urlCode)
+          const guestData = await getGuestByUrlCode(urlCode);
           if (guestData) {
-            setGuest(guestData)
+            setGuest(guestData);
             // Update language if guest has a preferred language
             if (guestData.language && guestData.language !== i18n.language) {
-              i18n.changeLanguage(guestData.language)
+              i18n.changeLanguage(guestData.language);
             }
           } else {
-            setError('guestNotFound')
+            setError("guestNotFound");
           }
         } catch (err) {
-          console.error('Error loading guest:', err)
-          setError('generic')
+          console.error("Error loading guest:", err);
+          setError("generic");
         }
       }
-      setLoading(false)
+      setLoading(false);
     }
 
-    loadGuest()
-  }, [urlCode, i18n])
+    loadGuest();
+  }, [urlCode, i18n]);
 
   if (loading) {
-    return <LightsaberLoading onComplete={() => {}} />
+    return <LightsaberLoading onComplete={() => {}} />;
   }
 
   return (
@@ -53,7 +66,7 @@ export default function Home() {
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-indigo/10 via-transparent to-pink/10 dark:from-indigo/20 dark:to-pink/20" />
-        
+
         {/* Starfield effect */}
         <div className="absolute inset-0 starfield-bg opacity-30" />
 
@@ -66,17 +79,17 @@ export default function Home() {
             <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest uppercase">
               A long time ago in a galaxy far, far away...
             </p>
-            
+
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-gradient font-display tracking-wider">
-              {t('home.title')}
+              {t("home.title")}
             </h1>
-            
+
             <LightsaberDivider color="pink" delay={500} className="my-8" />
-            
+
             <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-8 font-accent">
-              {t('home.subtitle')}
+              {t("home.subtitle")}
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-600 dark:text-gray-400">
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-indigo dark:text-pink" />
@@ -120,31 +133,36 @@ export default function Home() {
               className="glass-card text-center"
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-indigo dark:text-pink">
-                {t('home.personalizedWelcome', { name: guest.name })}
+                {t("home.personalizedWelcome", { name: guest.name })}
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-                {t('home.personalizedMessage')}
+                {t("home.personalizedMessage")}
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href={`/rsvp?code=${urlCode}`}
                   className="btn-primary inline-flex items-center justify-center gap-2"
                 >
                   <Heart className="w-5 h-5" />
-                  {t('home.viewRSVP')}
+                  {t("home.viewRSVP")}
                 </Link>
               </div>
 
               <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-sm text-gray-500 dark:text-gray-500">
-                  Reserved spots: <span className="font-bold text-indigo dark:text-pink">{guest.reserved_spots}</span>
+                  Reserved spots:{" "}
+                  <span className="font-bold text-indigo dark:text-pink">
+                    {guest.reserved_spots}
+                  </span>
                 </p>
                 {guest.rsvp !== null && (
                   <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                    RSVP Status: {' '}
-                    <span className={`font-bold ${guest.rsvp ? 'text-green-500' : 'text-red-500'}`}>
-                      {guest.rsvp ? 'Confirmed' : 'Declined'}
+                    RSVP Status:{" "}
+                    <span
+                      className={`font-bold ${guest.rsvp ? "text-green-500" : "text-red-500"}`}
+                    >
+                      {guest.rsvp ? "Confirmed" : "Declined"}
                     </span>
                   </p>
                 )}
@@ -159,24 +177,22 @@ export default function Home() {
               className="glass-card text-center"
             >
               {error ? (
-                <div className="text-red-500 mb-4">
-                  {t(`errors.${error}`)}
-                </div>
+                <div className="text-red-500 mb-4">{t(`errors.${error}`)}</div>
               ) : null}
-              
+
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-indigo dark:text-pink">
                 Welcome to Our Wedding
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {t('home.usePersonalLink')}
+                {t("home.usePersonalLink")}
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/rsvp"
                   className="btn-outline inline-flex items-center justify-center gap-2"
                 >
-                  {t('rsvp.loginWithGoogle')}
+                  {t("rsvp.loginWithGoogle")}
                 </Link>
               </div>
             </motion.div>
@@ -190,23 +206,23 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-indigo dark:text-pink">
             The Details
           </h2>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: Calendar,
-                title: 'Date & Time',
-                content: 'December 12, 2026\n4:00 PM',
+                title: "Date & Time",
+                content: "December 12, 2026\n4:00 PM",
               },
               {
                 icon: MapPin,
-                title: 'Location',
-                content: 'The Galactic Gardens\nBrasilia, Brazil',
+                title: "Location",
+                content: "The Galactic Gardens\nBrasilia, Brazil",
               },
               {
                 icon: Heart,
-                title: 'Dress Code',
-                content: 'Star Wars Elegant\n(Black Tie Optional)',
+                title: "Dress Code",
+                content: "Star Wars Elegant\n(Black Tie Optional)",
               },
             ].map((item, index) => (
               <motion.div
@@ -233,5 +249,5 @@ export default function Home() {
         </div>
       </section>
     </div>
-  )
+  );
 }
