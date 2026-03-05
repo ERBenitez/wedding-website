@@ -68,18 +68,24 @@
   
   .btn-primary {
     @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
-    @apply bg-indigo text-white;
-    @apply hover:bg-indigo-light hover:shadow-lg hover:shadow-indigo/30;
+    @apply bg-indigo-900 text-white;
+    @apply hover:bg-indigo-800 hover:shadow-lg hover:shadow-indigo/80;
     @apply active:scale-95;
   }
-  
+  .dark .btn-primary {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
+    @apply bg-pink-900 text-white;
+    @apply hover:bg-pink-800 hover:shadow-lg hover:shadow-pink/30;
+    @apply active:scale-95;
+  }
+  /*Check where this is used and create a dark variant */
   .btn-secondary {
     @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
-    @apply bg-pink text-white;
-    @apply hover:bg-pink-dark hover:shadow-lg hover:shadow-pink/30;
+    @apply bg-pink-900 text-white;
+    @apply hover:bg-pink-800 hover:shadow-lg hover:shadow-pink/30;
     @apply active:scale-95;
   }
-  
+  /*Check where this is used and create a dark variant */
   .btn-outline {
     @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
     @apply border-2 border-indigo text-indigo;

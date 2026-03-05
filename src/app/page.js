@@ -207,7 +207,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/rsvp"
-                  className="btn-outline inline-flex items-center justify-center gap-2"
+                  className="btn-primary inline-flex items-center justify-center gap-2"
                 >
                   {t("rsvp.loginWithGoogle")}
                 </Link>
