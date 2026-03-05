@@ -22,12 +22,12 @@
   
   body {
     @apply font-body antialiased;
-    background-color: var(--background);
     color: var(--foreground);
   }
-  
+
   html {
     scroll-behavior: smooth;
+    background-color: var(--background); /* fallback */
   }
 }
 

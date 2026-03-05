@@ -1,75 +1,94 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { getGuestByUrlCode } from "@/lib/supabase";
-import {
-  LightsaberDivider,
-  LightsaberLoading,
-} from "@/components/LightsaberDivider";
+import { LightsaberDivider } from "@/components/LightsaberDivider";
 import { Calendar, MapPin, Heart } from "lucide-react";
 
 export default function Home() {
   const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
 
-  const rawCode = searchParams.get("code");
+  const rawCode = useMemo(() => searchParams.get("code"), [searchParams]);
+  const [urlCode, setUrlCode] = useState(undefined);
 
-  // Persist
-  const urlCode = (() => {
-    if (rawCode) {
-      sessionStorage.setItem("guestCode", rawCode);
-      return rawCode;
+  // Read/write sessionStorage ONLY on the client
+  useEffect(() => {
+    try {
+      if (rawCode) {
+        sessionStorage.setItem("guestCode", rawCode);
+        setUrlCode(rawCode);
+      } else {
+        setUrlCode(sessionStorage.getItem("guestCode"));
+      }
+    } catch {
+      setUrlCode(rawCode);
     }
-    return sessionStorage.getItem("guestCode");
-  })();
+  }, [rawCode]);
 
   const [guest, setGuest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadGuest() {
-      if (urlCode) {
-        try {
-          const guestData = await getGuestByUrlCode(urlCode);
-          if (guestData) {
-            setGuest(guestData);
-            // Update language if guest has a preferred language
-            if (guestData.language && guestData.language !== i18n.language) {
-              i18n.changeLanguage(guestData.language);
-            }
-          } else {
-            setError("guestNotFound");
-          }
-        } catch (err) {
-          console.error("Error loading guest:", err);
-          setError("generic");
-        }
+      if (urlCode === undefined) return;
+
+      if (!urlCode) {
+        setLoading(false);
+        return;
       }
-      setLoading(false);
+
+      try {
+        const guestData = await getGuestByUrlCode(urlCode);
+        if (cancelled) return;
+
+        if (guestData) {
+          setGuest(guestData);
+          if (guestData.language && guestData.language !== i18n.language) {
+            i18n.changeLanguage(guestData.language);
+          }
+        } else {
+          setError("guestNotFound");
+        }
+      } catch (err) {
+        console.error("Error loading guest:", err);
+        if (!cancelled) setError("generic");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
 
     loadGuest();
+    return () => {
+      cancelled = true;
+    };
   }, [urlCode, i18n]);
 
   if (loading) {
-    return <LightsaberLoading onComplete={() => {}} />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo dark:border-pink mx-auto" />
+          <p className="text-gray-600 dark:text-gray-400 tracking-widest uppercase text-sm">
+            Loading...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen">
+      
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo/10 via-transparent to-pink/10 dark:from-indigo/20 dark:to-pink/20" />
-
-        {/* Starfield effect */}
-        <div className="absolute inset-0 starfield-bg opacity-30" />
-
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -93,7 +112,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-600 dark:text-gray-400">
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-indigo dark:text-pink" />
-                <span>December 12, 2026</span>
+                <span>September 5, 2026</span>
               </div>
               <span className="hidden sm:inline">|</span>
               <div className="flex items-center gap-2">
@@ -104,7 +123,7 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Floating hearts decoration */}
+        {/* Floating hearts */}
         <motion.div
           className="absolute top-20 left-10 text-pink/30"
           animate={{ y: [0, -20, 0] }}
@@ -125,7 +144,6 @@ export default function Home() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           {guest ? (
-            // Personalized view
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -169,16 +187,15 @@ export default function Home() {
               </div>
             </motion.div>
           ) : (
-            // Public view
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="glass-card text-center"
             >
-              {error ? (
+              {error && (
                 <div className="text-red-500 mb-4">{t(`errors.${error}`)}</div>
-              ) : null}
+              )}
 
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-indigo dark:text-pink">
                 Welcome to Our Wedding
@@ -201,7 +218,7 @@ export default function Home() {
       </section>
 
       {/* Wedding Details */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent via-indigo/5 to-transparent">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-indigo dark:text-pink">
             The Details
@@ -212,17 +229,18 @@ export default function Home() {
               {
                 icon: Calendar,
                 title: "Date & Time",
-                content: "December 12, 2026\n4:00 PM",
+                content: "September 05, 2026\n5:00 PM",
               },
               {
                 icon: MapPin,
                 title: "Location",
-                content: "The Galactic Gardens\nBrasilia, Brazil",
+                content:
+                  "Ceremony: Santuario Santo Antonio\nParty: Porto Cristal Eventos\nBrasilia, Brazil",
               },
               {
                 icon: Heart,
                 title: "Dress Code",
-                content: "Star Wars Elegant\n(Black Tie Optional)",
+                content: "Star Wars Black Tie",
               },
             ].map((item, index) => (
               <motion.div
