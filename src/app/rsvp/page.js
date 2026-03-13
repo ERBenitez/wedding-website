@@ -68,6 +68,12 @@ export default function RSVP() {
         // If no URL code or not found, try by logged-in user email
         if (!guestData && user?.email) {
           guestData = await getGuestByEmail(user.email);
+
+          if (guestData?.url_code) {
+            try {
+              sessionStorage.setItem("guestCode", guestData.url_code);
+            } catch {}
+          }
         }
 
         if (guestData) {
@@ -411,21 +417,36 @@ export default function RSVP() {
                     <Users className="w-4 h-4 inline mr-2" />
                     {t("rsvp.howMany")}
                   </label>
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="range"
-                      min="0"
-                      max={guest?.reserved_spots || 1}
-                      value={rsvpCount}
-                      onChange={(e) => setRsvpCount(parseInt(e.target.value))}
-                      className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-indigo"
-                    />
-                    <span className="text-2xl font-bold text-indigo dark:text-pink w-12 text-center">
+
+                  <div className="flex items-center justify-center gap-6">
+                    <button
+                      type="button"
+                      onClick={() => setRsvpCount((c) => Math.max(1, c - 1))}
+                      disabled={rsvpCount <= 1}
+                      className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
+                    >
+                      −
+                    </button>
+                    <span className="text-4xl font-bold text-indigo dark:text-pink w-12 text-center">
                       {rsvpCount}
                     </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setRsvpCount((c) =>
+                          Math.min(guest?.reserved_spots || 1, c + 1),
+                        )
+                      }
+                      disabled={rsvpCount >= (guest?.reserved_spots || 1)}
+                      className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
+                    >
+                      +
+                    </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Max: {guest?.reserved_spots} people
+
+                  <p className="text-xs text-gray-500 mt-3 text-center">
+                    Max: {guest?.reserved_spots}{" "}
+                    {guest?.reserved_spots === 1 ? "person" : "people"}
                   </p>
                 </motion.div>
               )}
