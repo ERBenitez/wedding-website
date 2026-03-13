@@ -14,10 +14,10 @@ export function Footer() {
             May the Force be with you
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
-            Made with <Heart className="w-4 h-4 text-pink fill-pink" /> by Olivia & Esteban
+            Made with <Heart className="w-4 h-4 text-pink fill-pink" /> by Olívia & Esteban
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-500">
-            © 2026 Olivia & Esteban. All rights reserved.
+            © 2026 Olívia & Esteban. All rights reserved.
           </p>
         </div>
       </div>

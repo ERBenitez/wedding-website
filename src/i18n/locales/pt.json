@@ -24,9 +24,9 @@
     "theme": "Tema"
   },
   "home": {
-    "title": "Olivia e Esteban",
+    "title": "Olívia e Esteban",
     "subtitle": "Há muito tempo, em uma galáxia muito, muito distante... duas almas colidiram.",
-    "date": "Junte-se à nossa jornada | 12 de dezembro de 2026",
+    "date": "Junte-se à nossa jornada | 5 de setembro de 2026",
     "usePersonalLink": "Por favor, use seu link pessoal para acessar seu convite",
     "personalizedWelcome": "Bem-vindo, {{name}}!",
     "personalizedMessage": "É uma honra tê-lo em nossa celebração",
@@ -49,7 +49,7 @@
     "successMessage": "Seu RSVP foi transmitido com sucesso!",
     "errorMessage": "Houve um erro ao transmitir seu RSVP. Por favor, tente novamente.",
     "alreadyResponded": "Você já respondeu a este convite",
-    "loginWithGoogle": "Entre com o seu email para gerenciar seu RSVP",
+    "loginWithGoogle": "Entre com o seu e-mail para gerenciar seu RSVP",
     "logout": "Sair"
   },
   "brasilia": {

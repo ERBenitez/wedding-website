@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata = {
-  title: 'Olivia & Esteban | A Star Wars Wedding',
+  title: 'Olívia & Esteban | A Star Wars Wedding',
   description: 'Join us on our journey to a galaxy far, far away...',
 }
 

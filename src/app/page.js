@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { getGuestByUrlCode } from "@/lib/supabase";
 import { LightsaberDivider } from "@/components/LightsaberDivider";
-import { Calendar, MapPin, Heart } from "lucide-react";
+import { Calendar, MapPin, Heart, Church, Shirt } from "lucide-react";
 
 export default function Home() {
   const { t, i18n } = useTranslation();
@@ -96,7 +96,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
           >
             <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest uppercase">
-              A long time ago in a galaxy far, far away...
+              May the Force be with Us
             </p>
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-gradient font-display tracking-wider">
@@ -117,7 +117,7 @@ export default function Home() {
               <span className="hidden sm:inline">|</span>
               <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-indigo dark:text-pink" />
-                <span>Brasilia, Brazil</span>
+                <span>Brasília, Brazil</span>
               </div>
             </div>
           </motion.div>
@@ -229,16 +229,22 @@ export default function Home() {
               {
                 icon: Calendar,
                 title: "Date & Time",
-                content: "September 05, 2026\n5:00 PM",
+                content: "September 5, 2026\n5:00 PM",
+              },
+              {
+                icon: Church,
+                title: "Ceremony",
+                content:
+                  "Santuário Santo Antônio\nBrasília, Brazil",
               },
               {
                 icon: MapPin,
-                title: "Location",
+                title: "Celebration",
                 content:
-                  "Ceremony: Santuario Santo Antonio\nParty: Porto Cristal Eventos\nBrasilia, Brazil",
+                  "Porto Cristal Eventos\nBrasília, Brazil",
               },
               {
-                icon: Heart,
+                icon: Shirt,
                 title: "Dress Code",
                 content: "Star Wars Black Tie",
               },

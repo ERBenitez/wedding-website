@@ -8,10 +8,10 @@ import { MapPin, ExternalLink, ChevronDown } from 'lucide-react'
 const recommendations = [
   {
     id: 1,
-    name: 'Cathedral of Brasilia (Catedral Metropolitana)',
+    name: 'Cathedral of Brasília (Catedral Metropolitana)',
     category: 'culture',
     description: 'An iconic modernist cathedral designed by Oscar Niemeyer. Its stunning architecture features 16 curved concrete columns and beautiful stained glass.',
-    address: 'Esplanada dos Ministerios, Brasilia',
+    address: 'Esplanada dos Ministerios, Brasília',
     website: 'https://catedral.org.br',
     image: '/images/catedral.jpg',
   },
@@ -20,7 +20,7 @@ const recommendations = [
     name: 'National Congress (Congresso Nacional)',
     category: 'culture',
     description: 'The seat of Brazil\'s federal government, featuring two iconic towers and two dome-shaped buildings. A masterpiece of modernist architecture.',
-    address: 'Praça dos Três Poderes, Brasilia',
+    address: 'Praça dos Três Poderes, Brasília',
     website: 'https://www.camara.leg.br',
     image: '/images/congresso.jpg',
   },
@@ -28,8 +28,8 @@ const recommendations = [
     id: 3,
     name: 'JK Memorial',
     category: 'culture',
-    description: 'A memorial dedicated to Juscelino Kubitschek, the founder of Brasilia. Features exhibits about his life and the construction of the city.',
-    address: 'Eixo Monumental, Brasilia',
+    description: 'A memorial dedicated to Juscelino Kubitschek, the founder of Brasília. Features exhibits about his life and the construction of the city.',
+    address: 'Eixo Monumental, Brasília',
     website: 'https://memorialjk.com.br',
     image: '/images/jk.jpg',
   },
@@ -38,22 +38,22 @@ const recommendations = [
     name: 'Parque da Cidade (City Park)',
     category: 'nature',
     description: 'One of the largest urban parks in the world, perfect for walking, cycling, picnics, and outdoor activities. Features a beautiful lake.',
-    address: 'SIG, Brasilia',
+    address: 'SIG, Brasília',
     website: null,
     image: '/images/parque.jpg',
   },
   {
     id: 5,
-    name: 'Brasilia National Park (Agua Mineral)',
+    name: 'Brasília National Park (Água Mineral)',
     category: 'nature',
     description: 'A natural oasis with crystal-clear mineral water pools, hiking trails, and abundant wildlife. Perfect for a refreshing swim.',
-    address: 'DF-001, Brasilia',
+    address: 'DF-001, Brasília',
     website: 'https://www.icmbio.gov.br',
     image: '/images/parque-nacional.jpg',
   },
   {
     id: 6,
-    name: 'Pontao do Lago Sul',
+    name: 'Pontão do Lago Sul',
     category: 'food',
     description: 'A vibrant waterfront area with numerous restaurants, bars, and cafes. Perfect for sunset views and enjoying local cuisine.',
     address: 'SHIS QI 15, Lago Sul',
@@ -65,7 +65,7 @@ const recommendations = [
     name: 'Mercado Municipal (Public Market)',
     category: 'food',
     description: 'A bustling market offering fresh produce, local delicacies, and traditional Brazilian food stalls. Great for experiencing local culture.',
-    address: 'WSN 306, Brasilia',
+    address: 'WSN 306, Brasília',
     website: null,
     image: '/images/mercado.jpg',
   },
@@ -74,34 +74,34 @@ const recommendations = [
     name: 'Vila Planalto',
     category: 'food',
     description: 'A charming neighborhood known for its excellent restaurants, from traditional Brazilian to international cuisine.',
-    address: 'Vila Planalto, Brasilia',
+    address: 'Vila Planalto, Brasília',
     website: null,
     image: '/images/vila.jpg',
   },
   {
     id: 9,
-    name: 'Setor de Diversoes (Entertainment Sector)',
+    name: 'Setor de Diversões (Entertainment Sector)',
     category: 'nightlife',
-    description: 'The heart of Brasilia\'s nightlife, featuring bars, clubs, and live music venues. Perfect for dancing the night away.',
-    address: 'CLS 404, Brasilia',
+    description: 'The heart of Brasília\'s nightlife, featuring bars, clubs, and live music venues. Perfect for dancing the night away.',
+    address: 'CLS 404, Brasília',
     website: null,
     image: '/images/nightlife.jpg',
   },
   {
     id: 10,
-    name: 'Santuario Dom Bosco',
+    name: 'Santuário Dom Bosco',
     category: 'culture',
     description: 'A breathtaking church with walls made entirely of blue Murano glass, creating a celestial atmosphere when sunlight streams through.',
-    address: 'W3 Sul, Brasilia',
+    address: 'W3 Sul, Brasília',
     website: null,
     image: '/images/santuario.jpg',
   },
   {
     id: 11,
-    name: 'Jardim Botanico (Botanical Garden)',
+    name: 'Jardim Botânico (Botanical Garden)',
     category: 'nature',
     description: 'A beautiful botanical garden showcasing the diverse flora of the Cerrado biome. Features walking trails and a peaceful atmosphere.',
-    address: 'SIG, Brasilia',
+    address: 'SIG, Brasília',
     website: 'https://www.jardimbotanicodebrasilia.df.gov.br',
     image: '/images/jardim.jpg',
   },
@@ -110,7 +110,7 @@ const recommendations = [
     name: 'Feira da Torre de TV (TV Tower Fair)',
     category: 'culture',
     description: 'A popular weekend fair at the base of the TV Tower, featuring local crafts, food, and live performances. Great for souvenirs.',
-    address: 'Eixo Monumental, Brasilia',
+    address: 'Eixo Monumental, Brasília',
     website: null,
     image: '/images/feira.jpg',
   },
@@ -193,7 +193,7 @@ function RecommendationCard({ item, index }) {
   )
 }
 
-export default function Brasilia() {
+export default function Brasília() {
   const { t } = useTranslation()
   const [activeCategory, setActiveCategory] = useState('all')
   const [visibleCount, setVisibleCount] = useState(6)
@@ -219,10 +219,10 @@ export default function Brasilia() {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-indigo dark:text-pink">
-            {t('brasilia.title')}
+            {t('brasília.title')}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            {t('brasilia.subtitle')}
+            {t('brasília.subtitle')}
           </p>
         </motion.div>
 
@@ -246,7 +246,7 @@ export default function Brasilia() {
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
-              {t(`brasilia.categories.${category}`)}
+              {t(`brasília.categories.${category}`)}
             </button>
           ))}
         </motion.div>
@@ -269,7 +269,7 @@ export default function Brasilia() {
               onClick={loadMore}
               className="btn-outline inline-flex items-center gap-2"
             >
-              {t('brasilia.loadMore')}
+              {t('brasília.loadMore')}
               <ChevronDown className="w-4 h-4" />
             </button>
           </motion.div>
