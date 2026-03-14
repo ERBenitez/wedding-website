@@ -18,7 +18,7 @@
   "navigation": {
     "home": "Inicio",
     "rsvp": "RSVP",
-    "brasilia": "Qué hacer en Brasilia",
+    "brasilia": "Qué hacer en Brasília",
     "admin": "Admin",
     "language": "Idioma",
     "theme": "Tema"
@@ -26,7 +26,7 @@
   "home": {
     "title": "Olívia y Esteban",
     "subtitle": "Hace mucho tiempo, en una galaxia muy, muy lejana... dos almas chocaron.",
-    "date": "Únete a nuestro viaje | 12 de diciembre de 2026",
+    "date": "Únete a nuestro viaje | 5 de septiembre de 2026",
     "usePersonalLink": "Por favor, usa tu enlace personal para acceder a tu invitación",
     "personalizedWelcome": "¡Bienvenido, {{name}}!",
     "personalizedMessage": "Es un honor tenerte en nuestra celebración",
@@ -53,7 +53,7 @@
     "logout": "Cerrar sesión"
   },
   "brasilia": {
-    "title": "Descubre Brasilia",
+    "title": "Descubre Brasília",
     "subtitle": "Explora la capital de Brasil mientras estás aquí",
     "loadMore": "Cargar Más",
     "categories": {
@@ -62,6 +62,44 @@
       "nature": "Naturaleza",
       "food": "Comida",
       "nightlife": "Vida Nocturna"
+    },
+    "recommendations": {
+      "cathedral": {
+        "description": "Una icónica catedral modernista diseñada por Oscar Niemeyer. Su impresionante arquitectura presenta 16 columnas curvas de concreto y hermosos vitrales."
+      },
+      "congress": {
+        "description": "La sede del gobierno federal de Brasil, con dos torres icónicas y dos edificios en forma de cúpula. Una obra maestra de la arquitectura modernista."
+      },
+      "jk": {
+        "description": "Un memorial dedicado a Juscelino Kubitschek, el fundador de Brasília. Incluye exposiciones sobre su vida y la construcción de la ciudad."
+      },
+      "parque": {
+        "description": "Uno de los parques urbanos más grandes del mundo, ideal para caminar, andar en bicicleta, hacer picnics y actividades al aire libre. Cuenta con un hermoso lago."
+      },
+      "nacional": {
+        "description": "Un oasis natural con piscinas de agua mineral cristalina, senderos para caminar y abundante vida silvestre. Perfecto para un refrescante baño."
+      },
+      "pontao": {
+        "description": "Una vibrante zona frente al lago con numerosos restaurantes, bares y cafés. Perfecto para disfrutar de las vistas al atardecer y la cocina local."
+      },
+      "mercado": {
+        "description": "Un animado mercado con productos frescos, delicias locales y puestos de comida brasileña tradicional. Ideal para vivir la cultura local."
+      },
+      "vila": {
+        "description": "Un encantador barrio conocido por sus excelentes restaurantes, desde cocina brasileña tradicional hasta gastronomía internacional."
+      },
+      "diversoes": {
+        "description": "El corazón de la vida nocturna de Brasília, con bares, clubes y locales de música en vivo. Perfecto para bailar toda la noche."
+      },
+      "dombosco": {
+        "description": "Una impresionante iglesia con paredes de vidrio de Murano azul, creando una atmósfera celestial cuando la luz del sol atraviesa los vitrales."
+      },
+      "jardim": {
+        "description": "Un hermoso jardín botánico que muestra la diversa flora del bioma Cerrado. Cuenta con senderos para caminar y una atmósfera tranquila."
+      },
+      "feira": {
+        "description": "Una popular feria de fin de semana en la base de la Torre de TV, con artesanías locales, comida y actuaciones en vivo. Ideal para recuerdos."
+      }
     }
   },
   "admin": {

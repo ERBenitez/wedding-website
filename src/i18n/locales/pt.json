@@ -62,6 +62,44 @@
       "nature": "Natureza",
       "food": "Comida",
       "nightlife": "Vida Noturna"
+    },
+    "recommendations": {
+      "cathedral": {
+        "description": "Uma icônica catedral modernista projetada por Oscar Niemeyer. Sua impressionante arquitetura apresenta 16 colunas curvas de concreto e belos vitrais."
+      },
+      "congress": {
+        "description": "A sede do governo federal do Brasil, com duas torres icônicas e dois edifícios em forma de cúpula. Uma obra-prima da arquitetura modernista."
+      },
+      "jk": {
+        "description": "Um memorial dedicado a Juscelino Kubitschek, o fundador de Brasília. Apresenta exposições sobre sua vida e a construção da cidade."
+      },
+      "parque": {
+        "description": "Um dos maiores parques urbanos do mundo, perfeito para caminhadas, ciclismo, piqueniques e atividades ao ar livre. Conta com um belo lago."
+      },
+      "nacional": {
+        "description": "Um oásis natural com piscinas de água mineral cristalina, trilhas para caminhada e abundante vida selvagem. Perfeito para um mergulho refrescante."
+      },
+      "pontao": {
+        "description": "Uma vibrante área à beira do lago com inúmeros restaurantes, bares e cafés. Perfeito para apreciar o pôr do sol e a culinária local."
+      },
+      "mercado": {
+        "description": "Um animado mercado com produtos frescos, iguarias locais e barracas de comida brasileira tradicional. Ótimo para vivenciar a cultura local."
+      },
+      "vila": {
+        "description": "Um charmoso bairro conhecido pelos seus excelentes restaurantes, da culinária brasileira tradicional à gastronomia internacional."
+      },
+      "diversoes": {
+        "description": "O coração da vida noturna de Brasília, com bares, clubes e casas de música ao vivo. Perfeito para dançar a noite toda."
+      },
+      "dombosco": {
+        "description": "Uma deslumbrante igreja com paredes de vidro de Murano azul, criando uma atmosfera celestial quando a luz do sol atravessa os vitrais."
+      },
+      "jardim": {
+        "description": "Um belo jardim botânico que apresenta a diversa flora do bioma Cerrado. Conta com trilhas para caminhada e uma atmosfera tranquila."
+      },
+      "feira": {
+        "description": "Uma popular feira de fim de semana na base da Torre de TV, com artesanato local, comida e apresentações ao vivo. Ótimo para lembranças."
+      }
     }
   },
   "admin": {
