@@ -1,169 +1,201 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useSupabase } from '@/contexts/SupabaseContext'
-import { getAllGuests, createGuest, updateGuest, deleteGuest, isAdmin } from '@/lib/supabase'
-import { Plus, Edit, Trash2, Search, X, Check, AlertCircle, Mail, Loader2, ArrowLeft } from 'lucide-react'
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { motion, AnimatePresence } from "framer-motion";
+import { useSupabase } from "@/contexts/SupabaseContext";
+import {
+  getAllGuests,
+  createGuest,
+  updateGuest,
+  deleteGuest,
+  isAdmin,
+} from "@/lib/supabase";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Search,
+  X,
+  Check,
+  AlertCircle,
+  Mail,
+  Loader2,
+  ArrowLeft,
+  Copy,
+  Check as CheckIcon,
+} from "lucide-react";
 
 export default function Admin() {
-  const { t } = useTranslation()
-  const router = useRouter()
-  const { user, signIn, signOut } = useSupabase()
-  
-  const [guests, setGuests] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [isAuthorized, setIsAuthorized] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  
+  const { t } = useTranslation();
+  const router = useRouter();
+  const { user, signIn, signOut } = useSupabase();
+  const [copiedId, setCopiedId] = useState(null);
+
+  const [guests, setGuests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   // Email login states
-  const [email, setEmail] = useState('')
-  const [emailSent, setEmailSent] = useState(false)
-  const [sendingEmail, setSendingEmail] = useState(false)
-  
+  const [email, setEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+
   // Modal states
-  const [showModal, setShowModal] = useState(false)
-  const [editingGuest, setEditingGuest] = useState(null)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null)
-  
+  const [showModal, setShowModal] = useState(false);
+  const [editingGuest, setEditingGuest] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+
   // Form states
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
     reservedSpots: 1,
-  })
-  const [formError, setFormError] = useState(null)
-  const [saving, setSaving] = useState(false)
+  });
+  const [formError, setFormError] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     async function checkAuth() {
       if (!user) {
-        setLoading(false)
-        return
+        setLoading(false);
+        return;
       }
 
       try {
-        const adminStatus = await isAdmin(user.email)
+        const adminStatus = await isAdmin(user.email);
         if (adminStatus) {
-          setIsAuthorized(true)
-          await loadGuests()
+          setIsAuthorized(true);
+          await loadGuests();
         } else {
-          setIsAuthorized(false)
+          setIsAuthorized(false);
         }
       } catch (err) {
-        console.error('Error checking admin status:', err)
-        setIsAuthorized(false)
+        console.error("Error checking admin status:", err);
+        setIsAuthorized(false);
       }
-      setLoading(false)
+      setLoading(false);
     }
 
-    checkAuth()
-  }, [user])
+    checkAuth();
+  }, [user]);
 
   const loadGuests = async () => {
     try {
-      const data = await getAllGuests()
-      setGuests(data)
+      const data = await getAllGuests();
+      setGuests(data);
     } catch (err) {
-      console.error('Error loading guests:', err)
+      console.error("Error loading guests:", err);
     }
-  }
+  };
+
+  const handleCopyLink = (guest) => {
+    const link = `${window.location.origin}/?code=${guest.url_code}`;
+    navigator.clipboard.writeText(link);
+    setCopiedId(guest.id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   const handleEmailSubmit = async (e) => {
-    e.preventDefault()
-    setSendingEmail(true)
+    e.preventDefault();
+    setSendingEmail(true);
 
     try {
-      await signIn(email)
-      setEmailSent(true)
+      await signIn(email);
+      setEmailSent(true);
     } catch (err) {
-      console.error('Error sending magic link:', err)
+      console.error("Error sending magic link:", err);
     }
 
-    setSendingEmail(false)
-  }
+    setSendingEmail(false);
+  };
 
   const handleAddGuest = () => {
-    setEditingGuest(null)
-    setFormData({ name: '', email: '', reservedSpots: 1 })
-    setFormError(null)
-    setShowModal(true)
-  }
+    setEditingGuest(null);
+    setFormData({ name: "", email: "", reservedSpots: 1 });
+    setFormError(null);
+    setShowModal(true);
+  };
 
   const handleEditGuest = (guest) => {
-    setEditingGuest(guest)
+    setEditingGuest(guest);
     setFormData({
       name: guest.name,
-      email: guest.email || '',
+      email: guest.email || "",
       reservedSpots: guest.reserved_spots,
-    })
-    setFormError(null)
-    setShowModal(true)
-  }
+    });
+    setFormError(null);
+    setShowModal(true);
+  };
 
   const handleDeleteGuest = async (guestId) => {
     try {
-      await deleteGuest(guestId)
-      await loadGuests()
-      setShowDeleteConfirm(null)
+      await deleteGuest(guestId);
+      await loadGuests();
+      setShowDeleteConfirm(null);
     } catch (err) {
-      console.error('Error deleting guest:', err)
+      console.error("Error deleting guest:", err);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setFormError(null)
-    setSaving(true)
+    e.preventDefault();
+    setFormError(null);
+    setSaving(true);
 
     try {
       if (editingGuest) {
-        await updateGuest(editingGuest.id, formData)
+        await updateGuest(editingGuest.id, formData);
       } else {
-        await createGuest(formData)
+        await createGuest(formData);
       }
-      await loadGuests()
-      setShowModal(false)
+      await loadGuests();
+      setShowModal(false);
     } catch (err) {
-      console.error('Error saving guest:', err)
-      setFormError(err.message || 'Error saving guest')
+      console.error("Error saving guest:", err);
+      setFormError(err.message || "Error saving guest");
     }
 
-    setSaving(false)
-  }
+    setSaving(false);
+  };
 
-  const filteredGuests = guests.filter(guest =>
-    guest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (guest.email && guest.email.toLowerCase().includes(searchQuery.toLowerCase()))
-  )
+  const filteredGuests = guests.filter(
+    (guest) =>
+      guest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (guest.email &&
+        guest.email.toLowerCase().includes(searchQuery.toLowerCase())),
+  );
 
-  const totalInvites = guests.length
+  const totalInvites = guests.length;
 
-const totalSeats = guests.reduce((sum, g) => sum + (g.reserved_spots ?? 0), 0)
+  const totalSeats = guests.reduce(
+    (sum, g) => sum + (g.reserved_spots ?? 0),
+    0,
+  );
 
-const confirmedSeats = guests.reduce(
-  (sum, g) => sum + (g.rsvp === true ? (g.rsvp_count ?? 0) : 0),
-  0
-)
+  const confirmedSeats = guests.reduce(
+    (sum, g) => sum + (g.rsvp === true ? (g.rsvp_count ?? 0) : 0),
+    0,
+  );
 
-const declinedInvites = guests.filter(g => g.rsvp === false).length
+  const declinedInvites = guests.filter((g) => g.rsvp === false).length;
 
-// Pending seats = reserved seats for invites that haven’t responded yet
-const pendingSeats = guests.reduce(
-  (sum, g) => sum + (g.rsvp === null ? (g.reserved_spots ?? 0) : 0),
-  0
-)
+  // Pending seats = reserved seats for invites that haven’t responded yet
+  const pendingSeats = guests.reduce(
+    (sum, g) => sum + (g.rsvp === null ? (g.reserved_spots ?? 0) : 0),
+    0,
+  );
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-indigo dark:text-pink">
-          {t('common.loading')}
+          {t("common.loading")}
         </div>
       </div>
-    )
+    );
   }
 
   // Not logged in - show email login
@@ -183,14 +215,14 @@ const pendingSeats = guests.reduce(
                   <div className="w-16 h-16 bg-indigo/10 dark:bg-pink/10 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Mail className="w-8 h-8 text-indigo dark:text-pink" />
                   </div>
-                  
+
                   <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-gray-200">
                     Admin Login
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
                     Enter your admin email to access the dashboard
                   </p>
-                  
+
                   <form onSubmit={handleEmailSubmit} className="space-y-4">
                     <div>
                       <input
@@ -202,7 +234,7 @@ const pendingSeats = guests.reduce(
                         className="input-field text-center"
                       />
                     </div>
-                    
+
                     <button
                       type="submit"
                       disabled={sendingEmail}
@@ -232,27 +264,27 @@ const pendingSeats = guests.reduce(
                   <div className="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Mail className="w-10 h-10 text-green-600" />
                   </div>
-                  
+
                   <h2 className="text-2xl font-bold text-green-600 mb-4">
                     Check Your Email!
                   </h2>
-                  
+
                   <p className="text-gray-600 dark:text-gray-400 mb-4">
                     We&apos;ve sent a magic link to:
                   </p>
-                  
+
                   <p className="text-lg font-medium text-indigo dark:text-pink mb-6">
                     {email}
                   </p>
-                  
+
                   <p className="text-sm text-gray-500">
                     Click the link in the email to log in.
                   </p>
-                  
+
                   <button
                     onClick={() => {
-                      setEmailSent(false)
-                      setEmail('')
+                      setEmailSent(false);
+                      setEmail("");
                     }}
                     className="mt-6 text-sm text-gray-500 hover:text-indigo dark:hover:text-pink flex items-center gap-2 mx-auto"
                   >
@@ -265,7 +297,7 @@ const pendingSeats = guests.reduce(
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Logged in but not authorized
@@ -276,24 +308,21 @@ const pendingSeats = guests.reduce(
           <div className="glass-card">
             <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-              {t('admin.accessDenied')}
+              {t("admin.accessDenied")}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              {t('admin.accessDeniedMessage')}
+              {t("admin.accessDeniedMessage")}
             </p>
             <p className="text-sm text-gray-500 mb-4">
               Signed in as: {user.email}
             </p>
-            <button
-              onClick={signOut}
-              className="btn-outline"
-            >
-              {t('common.logout')}
+            <button onClick={signOut} className="btn-outline">
+              {t("common.logout")}
             </button>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -307,13 +336,13 @@ const pendingSeats = guests.reduce(
         >
           <div>
             <h1 className="text-3xl md:text-4xl font-bold text-indigo dark:text-pink">
-              {t('admin.title')}
+              {t("admin.title")}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              {t('admin.subtitle')}
+              {t("admin.subtitle")}
             </p>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500">{user.email}</span>
             <button
@@ -321,7 +350,7 @@ const pendingSeats = guests.reduce(
               className="btn-primary inline-flex items-center gap-2"
             >
               <Plus className="w-5 h-5" />
-              {t('admin.addGuest')}
+              {t("admin.addGuest")}
             </button>
           </div>
         </motion.div>
@@ -339,7 +368,7 @@ const pendingSeats = guests.reduce(
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('admin.search')}
+              placeholder={t("admin.search")}
               className="input-field pl-10"
             />
           </div>
@@ -355,7 +384,7 @@ const pendingSeats = guests.reduce(
           {filteredGuests.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 dark:text-gray-400">
-                {t('admin.noGuests')}
+                {t("admin.noGuests")}
               </p>
             </div>
           ) : (
@@ -363,22 +392,22 @@ const pendingSeats = guests.reduce(
               <thead>
                 <tr className="border-b border-gray-200 dark:border-gray-700">
                   <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {t('admin.name')}
+                    {t("admin.name")}
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {t('admin.email')}
+                    {t("admin.email")}
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {t('admin.reservedSpots')}
+                    {t("admin.reservedSpots")}
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {t('admin.rsvpStatus')}
+                    {t("admin.rsvpStatus")}
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {t('admin.language')}
+                    {t("admin.language")}
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {t('admin.actions')}
+                    {t("admin.actions")}
                   </th>
                 </tr>
               </thead>
@@ -390,9 +419,11 @@ const pendingSeats = guests.reduce(
                   >
                     <td className="py-3 px-4 text-sm">{guest.name}</td>
                     <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
-                      {guest.email || '-'}
+                      {guest.email || "-"}
                     </td>
-                    <td className="py-3 px-4 text-sm">{guest.reserved_spots}</td>
+                    <td className="py-3 px-4 text-sm">
+                      {guest.reserved_spots}
+                    </td>
                     <td className="py-3 px-4 text-sm">
                       {guest.rsvp === null ? (
                         <span className="text-gray-400">Pending</span>
@@ -408,20 +439,33 @@ const pendingSeats = guests.reduce(
                         </span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-sm uppercase">{guest.language}</td>
+                    <td className="py-3 px-4 text-sm uppercase">
+                      {guest.language}
+                    </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
                         <button
+                          onClick={() => handleCopyLink(guest)}
+                          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-indigo dark:text-pink"
+                          title="Copy personal link"
+                        >
+                          {copiedId === guest.id ? (
+                            <CheckIcon className="w-4 h-4 text-green-500" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                        </button>
+                        <button
                           onClick={() => handleEditGuest(guest)}
                           className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-indigo dark:text-pink"
-                          title={t('admin.editGuest')}
+                          title={t("admin.editGuest")}
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setShowDeleteConfirm(guest)}
                           className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-red-500"
-                          title={t('admin.deleteGuest')}
+                          title={t("admin.deleteGuest")}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -436,36 +480,52 @@ const pendingSeats = guests.reduce(
 
         {/* Stats */}
         <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.3 }}
-  className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
->
-  <div className="glass-card text-center">
-    <p className="text-3xl font-bold text-indigo dark:text-pink">{totalInvites}</p>
-    <p className="text-sm text-gray-600 dark:text-gray-400">Invites</p>
-  </div>
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+        >
+          <div className="glass-card text-center">
+            <p className="text-3xl font-bold text-indigo dark:text-pink">
+              {totalInvites}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Invites</p>
+          </div>
 
-  <div className="glass-card text-center">
-    <p className="text-3xl font-bold text-red-600 dark:text-red-500">{declinedInvites}</p>
-    <p className="text-sm text-gray-600 dark:text-gray-400">Declined Invites</p>
-  </div>
+          <div className="glass-card text-center">
+            <p className="text-3xl font-bold text-red-600 dark:text-red-500">
+              {declinedInvites}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Declined Invites
+            </p>
+          </div>
 
-  <div className="glass-card text-center">
-    <p className="text-3xl font-bold text-indigo dark:text-pink">{totalSeats}</p>
-    <p className="text-sm text-gray-600 dark:text-gray-400">Total Guests</p>
-  </div>
+          <div className="glass-card text-center">
+            <p className="text-3xl font-bold text-indigo dark:text-pink">
+              {totalSeats}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Total Guests
+            </p>
+          </div>
 
-  <div className="glass-card text-center">
-    <p className="text-3xl font-bold text-green-600">{confirmedSeats}</p>
-    <p className="text-sm text-gray-600 dark:text-gray-400">Confirmed Guests</p>
-  </div>
+          <div className="glass-card text-center">
+            <p className="text-3xl font-bold text-green-600">
+              {confirmedSeats}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Confirmed Guests
+            </p>
+          </div>
 
-  <div className="glass-card text-center">
-    <p className="text-3xl font-bold text-gold">{pendingSeats}</p>
-    <p className="text-sm text-gray-600 dark:text-gray-400">Pending Guests</p>
-  </div>
-</motion.div>
+          <div className="glass-card text-center">
+            <p className="text-3xl font-bold text-gold">{pendingSeats}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Pending Guests
+            </p>
+          </div>
+        </motion.div>
       </div>
 
       {/* Add/Edit Modal */}
@@ -485,7 +545,7 @@ const pendingSeats = guests.reduce(
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-                  {editingGuest ? t('admin.editGuest') : t('admin.addGuest')}
+                  {editingGuest ? t("admin.editGuest") : t("admin.addGuest")}
                 </h3>
                 <button
                   onClick={() => setShowModal(false)}
@@ -498,12 +558,14 @@ const pendingSeats = guests.reduce(
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('admin.name')} *
+                    {t("admin.name")} *
                   </label>
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     required
                     className="input-field"
                   />
@@ -511,29 +573,37 @@ const pendingSeats = guests.reduce(
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('admin.email')}
+                    {t("admin.email")}
                   </label>
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     className="input-field"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Required for email login. Guest will receive magic link at this address.
+                    Required for email login. Guest will receive magic link at
+                    this address.
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t('admin.reservedSpots')} *
+                    {t("admin.reservedSpots")} *
                   </label>
                   <input
                     type="number"
                     min="1"
                     max="10"
                     value={formData.reservedSpots}
-                    onChange={(e) => setFormData({ ...formData, reservedSpots: parseInt(e.target.value) || 1 })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        reservedSpots: parseInt(e.target.value) || 1,
+                      })
+                    }
                     required
                     className="input-field"
                   />
@@ -551,14 +621,14 @@ const pendingSeats = guests.reduce(
                     onClick={() => setShowModal(false)}
                     className="btn-outline flex-1"
                   >
-                    {t('common.cancel')}
+                    {t("common.cancel")}
                   </button>
                   <button
                     type="submit"
                     disabled={saving}
                     className="btn-primary flex-1 disabled:opacity-50"
                   >
-                    {saving ? t('common.loading') : t('common.save')}
+                    {saving ? t("common.loading") : t("common.save")}
                   </button>
                 </div>
               </form>
@@ -587,20 +657,22 @@ const pendingSeats = guests.reduce(
                 Delete Guest?
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                Are you sure you want to delete <strong>{showDeleteConfirm.name}</strong>? This action cannot be undone.
+                Are you sure you want to delete{" "}
+                <strong>{showDeleteConfirm.name}</strong>? This action cannot be
+                undone.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowDeleteConfirm(null)}
                   className="btn-outline flex-1"
                 >
-                  {t('common.cancel')}
+                  {t("common.cancel")}
                 </button>
                 <button
                   onClick={() => handleDeleteGuest(showDeleteConfirm.id)}
                   className="btn-secondary flex-1 bg-red-500 hover:bg-red-600"
                 >
-                  {t('admin.deleteGuest')}
+                  {t("admin.deleteGuest")}
                 </button>
               </div>
             </motion.div>
@@ -608,5 +680,5 @@ const pendingSeats = guests.reduce(
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }

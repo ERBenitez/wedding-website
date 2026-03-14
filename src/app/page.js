@@ -51,8 +51,11 @@ export default function Home() {
 
         if (guestData) {
           setGuest(guestData);
-          if (guestData.language && guestData.language !== i18n.language) {
-            i18n.changeLanguage(guestData.language);
+          if (guestData.language) {
+            const manuallySet = localStorage.getItem("preferredLanguage");
+            if (!manuallySet && guestData.language !== i18n.language) {
+              i18n.changeLanguage(guestData.language);
+            }
           }
         } else {
           setError("guestNotFound");
@@ -86,7 +89,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -234,14 +236,12 @@ export default function Home() {
               {
                 icon: Church,
                 title: "Ceremony",
-                content:
-                  "Santuário Santo Antônio\nBrasília, Brazil",
+                content: "Santuário Santo Antônio\nBrasília, Brazil",
               },
               {
                 icon: MapPin,
                 title: "Celebration",
-                content:
-                  "Porto Cristal Eventos\nBrasília, Brazil",
+                content: "Porto Cristal Eventos\nBrasília, Brazil",
               },
               {
                 icon: Shirt,

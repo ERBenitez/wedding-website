@@ -3,6 +3,19 @@ import './globals.css'
 import { Providers } from '@/components/Providers'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
+import { Dancing_Script, Open_Sans } from 'next/font/google'
+
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  variable: '--font-dancing-script',
+  weight: ['400', '500', '600', '700']
+})
+
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  variable: '--font-open-sans',
+  weight: ['300', '400', '500', '600', '700']
+})
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -22,7 +35,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${dancingScript.variable} ${openSans.variable} antialiased`}>
         <Providers>
           <div className="min-h-screen flex flex-col relative">
             {/* Global background - covers all pages */}

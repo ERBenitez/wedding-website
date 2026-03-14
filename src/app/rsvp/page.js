@@ -33,7 +33,7 @@ export default function RSVP() {
       sessionStorage.setItem("guestCode", rawCode);
       return rawCode;
     }
-    return sessionStorage.getItem("guestCode");
+    return typeof window !== 'undefined' ? sessionStorage.getItem("guestCode") : null;
   })();
 
   const { user, signIn, signOut } = useSupabase();
@@ -82,8 +82,11 @@ export default function RSVP() {
           setRsvpCount(guestData.rsvp_count || 1);
           setFoodRestrictions(guestData.food_restrictions || "");
 
-          if (guestData.language && guestData.language !== i18n.language) {
-            i18n.changeLanguage(guestData.language);
+          if (guestData.language) {
+            const manuallySet = localStorage.getItem("preferredLanguage");
+            if (!manuallySet && guestData.language !== i18n.language) {
+              i18n.changeLanguage(guestData.language);
+            }
           }
         }
       } catch (err) {

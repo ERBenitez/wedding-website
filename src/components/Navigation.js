@@ -19,10 +19,24 @@ export function Navigation() {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const langMenuRef = useRef(null);
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    try {
+      const code = sessionStorage.getItem("guestCode");
+      setHasAccess(!!code || !!user);
+    } catch {
+      setHasAccess(!!user);
+    }
+  }, [user]);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    const saved = localStorage.getItem("preferredLanguage");
+    if (saved && saved !== i18n.language) {
+      i18n.changeLanguage(saved);
+    }
+  }, [i18n]);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -44,6 +58,7 @@ export function Navigation() {
 
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
+    localStorage.setItem("preferredLanguage", lang);
     setLangMenuOpen(false);
     setMobileMenuOpen(false);
   };
@@ -61,6 +76,7 @@ export function Navigation() {
   const navLinks = [
     { href: "/", label: t("navigation.home") },
     { href: "/brasilia", label: t("navigation.brasilia") },
+    ...(hasAccess ? [{ href: "/rsvp", label: t("navigation.rsvp") }] : []),
   ];
 
   const isActive = (href) => pathname === href;
