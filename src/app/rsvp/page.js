@@ -33,7 +33,9 @@ export default function RSVP() {
       sessionStorage.setItem("guestCode", rawCode);
       return rawCode;
     }
-    return typeof window !== 'undefined' ? sessionStorage.getItem("guestCode") : null;
+    return typeof window !== "undefined"
+      ? sessionStorage.getItem("guestCode")
+      : null;
   })();
 
   const { user, signIn, signOut } = useSupabase();
@@ -54,6 +56,23 @@ export default function RSVP() {
   const [rsvp, setRsvp] = useState(null);
   const [rsvpCount, setRsvpCount] = useState(1);
   const [foodRestrictions, setFoodRestrictions] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [countdown, setCountdown] = useState(5);
+
+  useEffect(() => {
+    if (success) {
+      const interval = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+      const timer = setTimeout(() => {
+        router.push("/");
+      }, 5000);
+      return () => {
+        clearTimeout(timer);
+        clearInterval(interval);
+      };
+    }
+  }, [success, router]);
 
   useEffect(() => {
     async function loadGuest() {
@@ -81,6 +100,7 @@ export default function RSVP() {
           setRsvp(guestData.rsvp);
           setRsvpCount(guestData.rsvp_count || 1);
           setFoodRestrictions(guestData.food_restrictions || "");
+          setGuestEmail(guestData.email || "");
 
           if (guestData.language) {
             const manuallySet = localStorage.getItem("preferredLanguage");
@@ -101,16 +121,27 @@ export default function RSVP() {
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
+
+    // Check cooldown from localStorage
+    const lastSent = localStorage.getItem("magicLinkLastSent");
+    if (lastSent && Date.now() - parseInt(lastSent) < 60000) {
+      const secondsLeft = Math.ceil(
+        (60000 - (Date.now() - parseInt(lastSent))) / 1000,
+      );
+      setEmailError(
+        `Please wait ${secondsLeft} seconds before requesting another link.`,
+      );
+      return;
+    }
+
     setEmailError(null);
     setSendingEmail(true);
 
     try {
-      // First check if this email exists in our guest list
       const guestData = await getGuestByEmail(email);
-
       if (!guestData) {
         setEmailError(
-          "Email not found in our guest list. Please use the email you provided to the couple, or use your personal link.",
+          "Email not found in our guest list. Please use your personal link or contact the couple for assistance.",
         );
         setSendingEmail(false);
         return;
@@ -118,9 +149,9 @@ export default function RSVP() {
 
       // Send magic link
       await signIn(email);
+      localStorage.setItem("magicLinkLastSent", Date.now().toString());
       setEmailSent(true);
     } catch (err) {
-      console.error("Error sending magic link:", err);
       setEmailError("Failed to send login link. Please try again.");
     }
 
@@ -139,6 +170,7 @@ export default function RSVP() {
         rsvp,
         rsvpCount: rsvp ? rsvpCount : 0,
         foodRestrictions,
+        email: guestEmail || null,
       });
       setSuccess(true);
     } catch (err) {
@@ -353,6 +385,9 @@ export default function RSVP() {
               <p className="text-gray-600 dark:text-gray-400">
                 {t("rsvp.successMessage")}
               </p>
+              <p className="text-sm text-gray-500 mt-2">
+                Redirecting to home in {countdown} s
+              </p>
             </motion.div>
           ) : (
             <form onSubmit={handleRSVPSubmit} className="space-y-6">
@@ -454,6 +489,25 @@ export default function RSVP() {
                 </motion.div>
               )}
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                  <Mail className="w-4 h-4 inline mr-2" />
+                  Email{" "}
+                  <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="email"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="input-field"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Add your email to be able to log in without your personal
+                  link.
+                </p>
+              </div>
+
               {/* Food Restrictions */}
               {rsvp === true && (
                 <motion.div
@@ -492,16 +546,6 @@ export default function RSVP() {
                       ? t("rsvp.update")
                       : t("rsvp.submit")}
                 </button>
-
-                {user && (
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="btn-outline"
-                  >
-                    {t("rsvp.logout")}
-                  </button>
-                )}
               </div>
             </form>
           )}

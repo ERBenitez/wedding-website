@@ -48,14 +48,20 @@ export async function getGuestByEmail(email) {
 }
 
 export async function updateGuestRSVP(guestId, rsvpData) {
+  const updateData = {
+    rsvp: rsvpData.rsvp,
+    rsvp_count: rsvpData.rsvpCount,
+    food_restrictions: rsvpData.foodRestrictions,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (rsvpData.email !== undefined) {
+    updateData.email = rsvpData.email;
+  }
+
   const { data, error } = await supabase
     .from("guests")
-    .update({
-      rsvp: rsvpData.rsvp,
-      rsvp_count: rsvpData.rsvpCount,
-      food_restrictions: rsvpData.foodRestrictions,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updateData)
     .eq("id", guestId)
     .select()
     .single();
