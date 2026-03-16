@@ -51,11 +51,8 @@ export default function Home() {
 
         if (guestData) {
           setGuest(guestData);
-          if (guestData.language) {
-            const manuallySet = localStorage.getItem("preferredLanguage");
-            if (!manuallySet && guestData.language !== i18n.language) {
-              i18n.changeLanguage(guestData.language);
-            }
+          if (guestData.language && guestData.language !== i18n.language) {
+            i18n.changeLanguage(guestData.language);
           }
         } else {
           setError("guestNotFound");
@@ -89,6 +86,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -97,11 +95,11 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest uppercase">
-              May the Force be with Us
+            <p style={{ fontFamily: 'Star Jedi' }} className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest">
+              May the Force be with us
             </p>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-gradient font-display tracking-wider">
+            <h1 className="font-cookie text-5xl md:text-7xl lg:text-8xl mb-6 text-gradient">
               {t("home.title")}
             </h1>
 
@@ -230,18 +228,18 @@ export default function Home() {
             {[
               {
                 icon: Calendar,
-                title: "Date & Time",
-                content: "September 5, 2026\n5:00 PM",
+                title: "Our Date",
+                content: "September 5, 2026",
               },
               {
                 icon: Church,
                 title: "Ceremony",
-                content: "Santuário Santo Antônio\nBrasília, Brazil",
+                content: "Santuário Santo Antônio\n5:00 PM\nBrasília, Brazil",
               },
               {
                 icon: MapPin,
                 title: "Celebration",
-                content: "Porto Cristal Eventos\nBrasília, Brazil",
+                content: "Porto Cristal Eventos\n7:00 PM\nBrasília, Brazil",
               },
               {
                 icon: Shirt,
