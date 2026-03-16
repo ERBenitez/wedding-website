@@ -95,8 +95,8 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p style={{ fontFamily: 'Star Jedi' }} className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest">
-              May the Force be with us
+            <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-8 font-accent">
+              {t("home.subtitle")}
             </p>
 
             <h1 className="font-cookie text-5xl md:text-7xl lg:text-8xl mb-6 text-gradient">
@@ -105,8 +105,8 @@ export default function Home() {
 
             <LightsaberDivider color="pink" delay={500} className="my-8" />
 
-            <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-8 font-accent">
-              {t("home.subtitle")}
+            <p style={{ fontFamily: 'Star Jedi' }} className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest">
+              May the Force be with us
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-600 dark:text-gray-400">
