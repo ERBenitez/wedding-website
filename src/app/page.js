@@ -51,9 +51,11 @@ export default function Home() {
 
         if (guestData) {
           setGuest(guestData);
-          if (guestData.language && guestData.language !== i18n.language) {
-            i18n.changeLanguage(guestData.language);
-          }
+          if (guestData.language) {
+            const manuallySet = localStorage.getItem("preferredLanguage");
+            if (!manuallySet && guestData.language !== i18n.language) {
+              i18n.changeLanguage(guestData.language);
+            }
         } else {
           setError("guestNotFound");
         }
