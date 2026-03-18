@@ -66,6 +66,7 @@ export default function Home() {
         if (!cancelled) setLoading(false);
       }
     }
+  }
 
     loadGuest();
     return () => {
