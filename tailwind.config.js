@@ -33,6 +33,7 @@ module.exports = {
         display: ["var(--font-star-jedi)", "sans-serif"],
         body: ["var(--font-open-sans)", "sans-serif"],
         accent: ["var(--font-dancing-script)", "cursive"],
+        cookie: ['var(--font-cookie)', 'cursive'],
       },
       animation: {
         "lightsaber-on": "lightsaberOn 0.8s ease-out forwards",
