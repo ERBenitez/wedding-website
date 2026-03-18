@@ -39,7 +39,6 @@ export default function Home() {
 
     async function loadGuest() {
       if (urlCode === undefined) return;
-
       if (!urlCode) {
         setLoading(false);
         return;
@@ -56,6 +55,7 @@ export default function Home() {
             if (!manuallySet && guestData.language !== i18n.language) {
               i18n.changeLanguage(guestData.language);
             }
+          }
         } else {
           setError("guestNotFound");
         }
@@ -66,7 +66,6 @@ export default function Home() {
         if (!cancelled) setLoading(false);
       }
     }
-  }
 
     loadGuest();
     return () => {
@@ -89,7 +88,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -102,13 +100,16 @@ export default function Home() {
               {t("home.subtitle")}
             </p>
 
-            <h1 className="font-cookie text-5xl md:text-7xl lg:text-8xl mb-6 text-gradient">
-              {t("home.title")}
-            </h1>
+            <h1 className="font-cookie text-5xl md:text-7xl lg:text-8xl mb-6 text-gradient leading-normal pb-2">
+  {t("home.title")}
+</h1>
 
             <LightsaberDivider color="pink" delay={500} className="my-8" />
 
-            <p style={{ fontFamily: 'Star Jedi' }} className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest">
+            <p
+              style={{ fontFamily: "Star Jedi" }}
+              className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 tracking-widest"
+            >
               May the Force be with us
             </p>
 
