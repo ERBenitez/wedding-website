@@ -24,8 +24,8 @@ export function getLanguageName(code) {
 
 export function getLanguageFlag(code) {
   const flags = {
-    en: '🇺🇸',
-    es: '🇪🇸',
+    en: '🇨🇦',
+    es: '🇸🇻',
     pt: '🇧🇷'
   }
   return flags[code] || '🌐'
