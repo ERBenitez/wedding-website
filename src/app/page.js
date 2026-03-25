@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { getGuestByUrlCode } from "@/lib/supabase";
 import { LightsaberDivider } from "@/components/LightsaberDivider";
-import { Calendar, MapPin, Heart, Church, Shirt } from "lucide-react";
+import { Calendar, MapPin, Heart, Church, Shirt, PartyPopper, Cake } from "lucide-react";
 
 export default function Home() {
   const { t, i18n } = useTranslation();
@@ -231,24 +231,22 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: Calendar,
-                title: "Our Date",
-                content: "September 5, 2026",
-              },
-              {
                 icon: Church,
                 title: "Ceremony",
                 content: "Santuário Santo Antônio\n5:00 PM\nBrasília, Brazil",
+                link: "https://www.google.com/maps/place/Santuário+Santo+Antônio/data=!4m2!3m1!1s0x0:0x1d5df1a5fdeca27e?sa=X&ved=1t:2428&ictx=111",
               },
               {
-                icon: MapPin,
+                icon: Cake,
                 title: "Celebration",
                 content: "Porto Cristal Eventos\n7:00 PM\nBrasília, Brazil",
+                link: "https://www.google.com/maps/place/Crystal+Harbor+Events/@-15.8506642,-48.0114984,15z/data=!3m1!4b1!4m6!3m5!1s0x935a2e07585aed5b:0x103df11782ca6dfa!8m2!3d-15.8506851!4d-48.0012201!16s%2Fg%2F1s04g97zm?entry=ttu&g_ep=EgoyMDI2MDMyMi4wIKXMDSoASAFQAw%3D%3D",
               },
               {
                 icon: Shirt,
                 title: "Dress Code",
                 content: "Star Wars Black Tie",
+                link: null,
               },
             ].map((item, index) => (
               <motion.div
@@ -256,7 +254,10 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass-card text-center hover:scale-105 transition-transform duration-300"
+                className={`glass-card text-center transition-transform duration-300 ${
+                  item.link ? 'hover:scale-105 cursor-pointer' : ''
+                }`}
+                onClick={() => item.link && window.open(item.link, '_blank')}
               >
                 <div className="flex justify-center mb-4">
                   <div className="p-4 rounded-full bg-indigo/10 dark:bg-pink/10">
