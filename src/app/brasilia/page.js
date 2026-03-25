@@ -63,40 +63,13 @@ const recommendations = [
     image: "/images/pontao.jpg",
   },
   {
-    id: 7,
-    key: "mercado",
-    name: "Mercado Municipal (Public Market)",
-    category: "food",
-    address: "WSN 306, Brasília",
-    website: null,
-    image: "/images/mercado.jpg",
-  },
-  {
-    id: 8,
-    key: "vila",
-    name: "Vila Planalto",
-    category: "food",
-    address: "Vila Planalto, Brasília",
-    website: null,
-    image: "/images/vila.jpg",
-  },
-  {
-    id: 9,
-    key: "diversoes",
-    name: "Setor de Diversões (Entertainment Sector)",
-    category: "nightlife",
-    address: "CLS 404, Brasília",
-    website: null,
-    image: "/images/nightlife.jpg",
-  },
-  {
     id: 10,
-    key: "dombosco",
-    name: "Santuário Dom Bosco",
+    key: "estadio",
+    name: "Estádio Nacional Mané Garrincha",
     category: "culture",
-    address: "W3 Sul, Brasília",
-    website: null,
-    image: "/images/santuario.jpg",
+    address: "Arena BRB Mané Garrincha, Brasília",
+    website: "https://arenabsb.com.br",
+    image: "/images/estadio.jpg",
   },
   {
     id: 11,
@@ -149,7 +122,7 @@ function RecommendationCard({ item, index }) {
       initial={{ opacity: 0, y: 30 }}
       animate={isVisible ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.05 }}
-      className="glass-card overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      className="glass-card overflow-hidden transition-shadow duration-300 hover:shadow-xl hover:shadow-indigo/20 dark:hover:shadow-pink-400/20"
     >
       {/* Category icon placeholder */}
       <div className="h-48 relative overflow-hidden">

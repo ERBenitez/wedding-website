@@ -82,17 +82,8 @@
       "pontao": {
         "description": "Uma vibrante área à beira do lago com inúmeros restaurantes, bares e cafés. Perfeito para apreciar o pôr do sol e a culinária local."
       },
-      "mercado": {
-        "description": "Um animado mercado com produtos frescos, iguarias locais e barracas de comida brasileira tradicional. Ótimo para vivenciar a cultura local."
-      },
-      "vila": {
-        "description": "Um charmoso bairro conhecido pelos seus excelentes restaurantes, da culinária brasileira tradicional à gastronomia internacional."
-      },
-      "diversoes": {
-        "description": "O coração da vida noturna de Brasília, com bares, clubes e casas de música ao vivo. Perfeito para dançar a noite toda."
-      },
-      "dombosco": {
-        "description": "Uma deslumbrante igreja com paredes de vidro de Murano azul, criando uma atmosfera celestial quando a luz do sol atravessa os vitrais."
+      "estadio": {
+        "description": "Um estadio impressionante com um design moderno, lar do \"Canarinho\". Um símbolo da paixão do Brasil pelo futebol."
       },
       "jardim": {
         "description": "Um belo jardim botânico que apresenta a diversa flora do bioma Cerrado. Conta com trilhas para caminhada e uma atmosfera tranquila."
