@@ -233,7 +233,7 @@ export default function Home() {
               {
                 icon: Church,
                 title: "Ceremony",
-                content: "Santuário Santo Antônio\n5:00 PM\nBrasília, Brazil",
+                content: "Santuário Santo Antônio\n4:30 PM\nBrasília, Brazil",
                 link: "https://www.google.com/maps/place/Santuário+Santo+Antônio/data=!4m2!3m1!1s0x0:0x1d5df1a5fdeca27e?sa=X&ved=1t:2428&ictx=111",
               },
               {
