@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { MapPin, ExternalLink, ChevronDown } from "lucide-react";
+import Image from "next/image";
 
 // Place names and addresses stay in Portuguese as proper nouns
 // Descriptions are translated via i18n keys
@@ -124,12 +125,13 @@ function RecommendationCard({ item, index }) {
       transition={{ duration: 0.5, delay: index * 0.05 }}
       className="glass-card overflow-hidden transition-shadow duration-300 hover:shadow-xl hover:shadow-indigo/20 dark:hover:shadow-pink-400/20"
     >
-      {/* Category icon placeholder */}
       <div className="h-48 relative overflow-hidden">
-        <img
+        <Image
           src={item.image}
           alt={item.name}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
@@ -9,7 +9,7 @@ import { getGuestByUrlCode } from "@/lib/supabase";
 import { LightsaberDivider } from "@/components/LightsaberDivider";
 import { Calendar, MapPin, Heart, Church, Shirt, PartyPopper, Cake } from "lucide-react";
 
-export default function Home() {
+function HomeContent() {
   const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
 
@@ -276,5 +276,26 @@ export default function Home() {
         </div>
       </section>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo dark:border-pink mx-auto" />
+        <p className="text-gray-600 dark:text-gray-400 tracking-widest uppercase text-sm">
+          Loading...
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <HomeContent />
+    </Suspense>
   );
 }

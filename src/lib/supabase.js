@@ -16,13 +16,11 @@ export function generateUrlCode() {
   return code;
 }
 
-// Guest-related functions
+// Guest-related functions (use RPC for security)
 export async function getGuestByUrlCode(urlCode) {
-  const { data, error } = await supabase
-    .from("guests")
-    .select("*")
-    .eq("url_code", urlCode)
-    .single();
+  const { data, error } = await supabase.rpc("get_guest_by_code", {
+    p_url_code: urlCode,
+  });
 
   if (error) {
     console.error("Error fetching guest:", error);
@@ -33,11 +31,9 @@ export async function getGuestByUrlCode(urlCode) {
 }
 
 export async function getGuestByEmail(email) {
-  const { data, error } = await supabase
-    .from("guests")
-    .select("*")
-    .eq("email", email)
-    .single();
+  const { data, error } = await supabase.rpc("get_guest_by_email", {
+    p_email: email,
+  });
 
   if (error) {
     console.error("Error fetching guest by email:", error);
@@ -48,33 +44,19 @@ export async function getGuestByEmail(email) {
 }
 
 export async function updateGuestRSVP(guestId, rsvpData) {
-  const updateData = {
-    rsvp: rsvpData.rsvp,
-    rsvp_count: rsvpData.rsvpCount,
-    food_restrictions: rsvpData.foodRestrictions,
-    updated_at: new Date().toISOString(),
-  };
-
-  if (rsvpData.email !== undefined) {
-    updateData.email = rsvpData.email;
-  }
-
-  const { data, error } = await supabase
-    .from("guests")
-    .update(updateData)
-    .eq("id", guestId)
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc("update_rsvp", {
+    p_guest_id: guestId,
+    p_rsvp: rsvpData.rsvp,
+    p_rsvp_count: rsvpData.rsvpCount,
+    p_adults_count: rsvpData.adultsCount ?? 0,
+    p_kids_7_to_9_count: rsvpData.kids7to9Count ?? 0,
+    p_kids_6_under_count: rsvpData.kids6UnderCount ?? 0,
+    p_food_restrictions: rsvpData.foodRestrictions || "",
+    p_email: rsvpData.email || null,
+  });
 
   if (error) {
     console.error("Error updating RSVP:", JSON.stringify(error, null, 2));
-    console.error(
-      "Error details:",
-      error.message,
-      error.code,
-      error.details,
-      error.hint,
-    );
     throw error;
   }
 
@@ -100,7 +82,7 @@ export async function updateGuestLanguage(guestId, language) {
   return data;
 }
 
-// Admin functions
+// Admin functions (protected by "Admin full access" RLS policy)
 export async function getAllGuests() {
   const { data, error } = await supabase
     .from("guests")
@@ -172,19 +154,18 @@ export async function deleteGuest(guestId) {
   return true;
 }
 
-// Check if user is admin
+// Check if user is admin (uses RPC for security)
 export async function isAdmin(email) {
-  const { data, error } = await supabase
-    .from("admin_users")
-    .select("*")
-    .eq("email", email)
-    .single();
+  const { data, error } = await supabase.rpc("check_is_admin", {
+    p_email: email,
+  });
 
-  if (error || !data) {
+  if (error) {
+    console.error("Error checking admin status:", error);
     return false;
   }
 
-  return true;
+  return data === true;
 }
 
 // Email authentication functions

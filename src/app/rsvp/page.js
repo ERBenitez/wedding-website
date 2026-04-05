@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
@@ -22,7 +22,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-export default function RSVP() {
+function RSVPContent() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -54,10 +54,14 @@ export default function RSVP() {
 
   // RSVP form states
   const [rsvp, setRsvp] = useState(null);
-  const [rsvpCount, setRsvpCount] = useState(1);
+  const [adultsCount, setAdultsCount] = useState(1);
+  const [kids7to9Count, setKids7to9Count] = useState(0);
+  const [kids6UnderCount, setKids6UnderCount] = useState(0);
   const [foodRestrictions, setFoodRestrictions] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [countdown, setCountdown] = useState(5);
+
+  const rsvpCount = adultsCount + kids7to9Count + kids6UnderCount;
 
   useEffect(() => {
     if (success) {
@@ -98,7 +102,9 @@ export default function RSVP() {
         if (guestData) {
           setGuest(guestData);
           setRsvp(guestData.rsvp);
-          setRsvpCount(guestData.rsvp_count || 1);
+          setAdultsCount(guestData.adults_count || 1);
+          setKids7to9Count(guestData.kids_7_to_9_count || 0);
+          setKids6UnderCount(guestData.kids_6_under_count || 0);
           setFoodRestrictions(guestData.food_restrictions || "");
           setGuestEmail(guestData.email || "");
 
@@ -169,6 +175,9 @@ export default function RSVP() {
       await updateGuestRSVP(guest.id, {
         rsvp,
         rsvpCount: rsvp ? rsvpCount : 0,
+        adultsCount: rsvp ? adultsCount : 0,
+        kids7to9Count: rsvp ? kids7to9Count : 0,
+        kids6UnderCount: rsvp ? kids6UnderCount : 0,
         foodRestrictions,
         email: guestEmail || null,
       });
@@ -444,46 +453,117 @@ export default function RSVP() {
                 </div>
               </div>
 
-              {/* Number of Attendees */}
+              {/* Number of Attendees by Age Group */}
               {rsvp === true && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
+                  className="space-y-6"
                 >
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                     <Users className="w-4 h-4 inline mr-2" />
                     {t("rsvp.howMany")}
                   </label>
 
-                  <div className="flex items-center justify-center gap-6">
-                    <button
-                      type="button"
-                      onClick={() => setRsvpCount((c) => Math.max(1, c - 1))}
-                      disabled={rsvpCount <= 1}
-                      className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
-                    >
-                      −
-                    </button>
-                    <span className="text-4xl font-bold text-indigo dark:text-pink w-12 text-center">
-                      {rsvpCount}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setRsvpCount((c) =>
-                          Math.min(guest?.reserved_spots || 1, c + 1),
-                        )
-                      }
-                      disabled={rsvpCount >= (guest?.reserved_spots || 1)}
-                      className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
-                    >
-                      +
-                    </button>
+                  {/* Adults / +9 */}
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
+                      {t("rsvp.adults")}
+                    </p>
+                    <div className="flex items-center justify-center gap-6">
+                      <button
+                        type="button"
+                        onClick={() => setAdultsCount((c) => Math.max(1, c - 1))}
+                        disabled={adultsCount <= 1}
+                        className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
+                      >
+                        −
+                      </button>
+                      <span className="text-4xl font-bold text-indigo dark:text-pink w-12 text-center">
+                        {adultsCount}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setAdultsCount((c) =>
+                            rsvpCount < (guest?.reserved_spots || 1) ? c + 1 : c
+                          )
+                        }
+                        disabled={rsvpCount >= (guest?.reserved_spots || 1)}
+                        className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Kids 7-9 */}
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
+                      {t("rsvp.kids7to9")}
+                    </p>
+                    <div className="flex items-center justify-center gap-6">
+                      <button
+                        type="button"
+                        onClick={() => setKids7to9Count((c) => Math.max(0, c - 1))}
+                        disabled={kids7to9Count <= 0}
+                        className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
+                      >
+                        −
+                      </button>
+                      <span className="text-4xl font-bold text-indigo dark:text-pink w-12 text-center">
+                        {kids7to9Count}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setKids7to9Count((c) =>
+                            rsvpCount < (guest?.reserved_spots || 1) ? c + 1 : c
+                          )
+                        }
+                        disabled={rsvpCount >= (guest?.reserved_spots || 1)}
+                        className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Kids 6 and under */}
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
+                      {t("rsvp.kids6under")}
+                    </p>
+                    <div className="flex items-center justify-center gap-6">
+                      <button
+                        type="button"
+                        onClick={() => setKids6UnderCount((c) => Math.max(0, c - 1))}
+                        disabled={kids6UnderCount <= 0}
+                        className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
+                      >
+                        −
+                      </button>
+                      <span className="text-4xl font-bold text-indigo dark:text-pink w-12 text-center">
+                        {kids6UnderCount}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setKids6UnderCount((c) =>
+                            rsvpCount < (guest?.reserved_spots || 1) ? c + 1 : c
+                          )
+                        }
+                        disabled={rsvpCount >= (guest?.reserved_spots || 1)}
+                        className="w-10 h-10 rounded-full border-2 border-indigo dark:border-pink text-indigo dark:text-pink text-xl font-bold disabled:opacity-30 hover:bg-indigo hover:text-white dark:hover:bg-pink transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
 
                   <p className="text-xs text-gray-500 mt-3 text-center">
-                    Max: {guest?.reserved_spots}{" "}
+                    {t("rsvp.totalAttending")}: <span className="font-bold text-indigo dark:text-pink">{rsvpCount}</span> / {guest?.reserved_spots}{" "}
                     {guest?.reserved_spots === 1 ? "person" : "people"}
                   </p>
                 </motion.div>
@@ -552,5 +632,17 @@ export default function RSVP() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function RSVP() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-indigo dark:text-pink">Loading...</div>
+      </div>
+    }>
+      <RSVPContent />
+    </Suspense>
   );
 }

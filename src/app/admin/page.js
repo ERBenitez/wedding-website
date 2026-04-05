@@ -188,6 +188,21 @@ export default function Admin() {
     0,
   );
 
+  const confirmedAdults = guests.reduce(
+    (sum, g) => sum + (g.rsvp === true ? (g.adults_count ?? 0) : 0),
+    0,
+  );
+
+  const confirmedKids7to9 = guests.reduce(
+    (sum, g) => sum + (g.rsvp === true ? (g.kids_7_to_9_count ?? 0) : 0),
+    0,
+  );
+
+  const confirmedKids6Under = guests.reduce(
+    (sum, g) => sum + (g.rsvp === true ? (g.kids_6_under_count ?? 0) : 0),
+    0,
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -428,9 +443,14 @@ export default function Admin() {
                       {guest.rsvp === null ? (
                         <span className="text-gray-400">Pending</span>
                       ) : guest.rsvp ? (
-                        <span className="flex items-center gap-1 text-green-600">
-                          <Check className="w-4 h-4" />
-                          Yes ({guest.rsvp_count})
+                        <span className="text-green-600">
+                          <span className="flex items-center gap-1">
+                            <Check className="w-4 h-4" />
+                            Yes ({guest.rsvp_count})
+                          </span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {guest.adults_count || 0} adults, {guest.kids_7_to_9_count || 0} kids 7-9, {guest.kids_6_under_count || 0} kids ≤6
+                          </span>
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-red-600">
@@ -483,7 +503,7 @@ export default function Admin() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+          className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4"
         >
           <div className="glass-card text-center">
             <p className="text-3xl font-bold text-indigo dark:text-pink">
@@ -523,6 +543,27 @@ export default function Admin() {
             <p className="text-3xl font-bold text-gold">{pendingSeats}</p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Pending Guests
+            </p>
+          </div>
+
+          <div className="glass-card text-center">
+            <p className="text-3xl font-bold text-indigo dark:text-pink">{confirmedAdults}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Adults / +9
+            </p>
+          </div>
+
+          <div className="glass-card text-center">
+            <p className="text-3xl font-bold text-indigo dark:text-pink">{confirmedKids7to9}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Kids 7–9
+            </p>
+          </div>
+
+          <div className="glass-card text-center">
+            <p className="text-3xl font-bold text-indigo dark:text-pink">{confirmedKids6Under}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Kids ≤ 6
             </p>
           </div>
         </motion.div>
