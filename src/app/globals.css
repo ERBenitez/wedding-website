@@ -3,11 +3,17 @@
 @tailwind utilities;
 
 
-
 :root {
   --font-star-jedi: 'Star Jedi', sans-serif;
   --background: #f8f5f2;
   --foreground: #1a1a1a;
+  --colour-lightprimary: #2A007F;
+  --colour-darkprimary: #D30071;
+  --colour-lightsecundary: #8C58F5;
+  --colour-darksecundary: #D692B7;
+  --colour-accent: #EFC2FF;
+  --colour-lighttext: #000;
+  --colour-darktext: #FFF;
 }
 
 .dark {
