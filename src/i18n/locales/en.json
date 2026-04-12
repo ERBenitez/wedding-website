@@ -21,7 +21,8 @@
     "brasilia": "Things to Do in Brasília",
     "admin": "Admin",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "privacy": "Privacy"
   },
   "home": {
     "title": "Olívia & Esteban",
@@ -54,7 +55,8 @@
     "errorMessage": "There was an error transmitting your RSVP. Please try again.",
     "alreadyResponded": "You have already responded to this invitation",
     "loginWithGoogle": "Login with your email to manage your RSVP",
-    "logout": "Logout"
+    "logout": "Logout",
+    "privacyNotice": "By submitting your RSVP, you agree to our <1>Privacy Notice</1>."
   },
   "brasilia": {
     "title": "Discover Brasília",
@@ -126,5 +128,40 @@
     },
     "guestNotFound": "Guest not found. Please check your link.",
     "generic": "Something went wrong. Please try again."
+  },
+  "privacy": {
+    "title": "Privacy Notice",
+    "lastUpdated": "Last updated: April 2026",
+    "intro": "Your privacy matters to us. This notice explains how we handle the personal information collected through our wedding website.",
+    "sections": {
+      "whatWeCollect": {
+        "title": "What We Collect",
+        "content": "We collect your name, email address (optional), number of attendees, age groups of attendees, and any dietary restrictions or allergies you share with us through the RSVP form."
+      },
+      "whyWeCollect": {
+        "title": "Why We Collect It",
+        "content": "We use this information solely to organize our wedding — to manage the guest list, plan seating, coordinate catering, and communicate important event details with you."
+      },
+      "howWeStore": {
+        "title": "How We Store It",
+        "content": "Your data is stored securely on Supabase, a trusted cloud platform with encryption at rest and in transit. Access is restricted through row-level security policies and secure authentication."
+      },
+      "whoHasAccess": {
+        "title": "Who Has Access",
+        "content": "Only Olívia and Esteban (the couple) have administrative access to the guest data. Your information will never be shared with, sold to, or disclosed to third parties."
+      },
+      "yourRights": {
+        "title": "Your Rights",
+        "content": "You can update your RSVP and personal information at any time through the website. If you'd like to request the deletion of your data, please contact us directly."
+      },
+      "dataRetention": {
+        "title": "Data Retention",
+        "content": "All personal data collected through this website will be permanently deleted after the wedding and any related follow-up communications are complete."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "content": "If you have any questions about how your data is handled, please reach out to us at oliviaestebanr@gmail.com."
+      }
+    }
   }
 }

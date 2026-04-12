@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
           <div className="min-h-screen flex flex-col relative">
             {/* Global background - covers all pages */}
             <div className="fixed inset-0 -z-10 site-gradient" />
-            <div className="fixed inset-0 -z-10 starfield-bg opacity-30" />
+            <div className="fixed inset-0 -z-10 starfield-bg opacity 10" />
             <Navigation />
             <main className="flex-grow">
               {children}

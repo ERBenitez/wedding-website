@@ -21,7 +21,8 @@
     "brasilia": "Qué hacer en Brasília",
     "admin": "Admin",
     "language": "Idioma",
-    "theme": "Tema"
+    "theme": "Tema",
+    "privacy": "Privacidad"
   },
   "home": {
     "title": "Olívia y Esteban",
@@ -54,7 +55,8 @@
     "errorMessage": "Hubo un error al transmitir tu RSVP. Por favor, inténtalo de nuevo.",
     "alreadyResponded": "Ya has respondido a esta invitación",
     "loginWithGoogle": "Inicia sesión con tu correo para gestionar tu RSVP",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "privacyNotice": "Al enviar tu RSVP, aceptas nuestro <1>Aviso de Privacidad</1>."
   },
   "brasilia": {
     "title": "Descubre Brasília",
@@ -126,5 +128,40 @@
     },
     "guestNotFound": "Invitado no encontrado. Por favor, verifica tu enlace.",
     "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
+  },
+  "privacy": {
+    "title": "Aviso de Privacidad",
+    "lastUpdated": "Última actualización: abril de 2026",
+    "intro": "Tu privacidad es importante para nosotros. Este aviso explica cómo manejamos la información personal recopilada a través de nuestro sitio web de boda.",
+    "sections": {
+      "whatWeCollect": {
+        "title": "Qué Recopilamos",
+        "content": "Recopilamos tu nombre, dirección de correo electrónico (opcional), número de asistentes, grupos de edad de los asistentes y cualquier restricción dietética o alergia que compartas con nosotros a través del formulario RSVP."
+      },
+      "whyWeCollect": {
+        "title": "Por Qué lo Recopilamos",
+        "content": "Utilizamos esta información únicamente para organizar nuestra boda — gestionar la lista de invitados, planificar los asientos, coordinar el catering y comunicarte detalles importantes del evento."
+      },
+      "howWeStore": {
+        "title": "Cómo lo Almacenamos",
+        "content": "Tus datos se almacenan de forma segura en Supabase, una plataforma en la nube confiable con cifrado en reposo y en tránsito. El acceso está restringido mediante políticas de seguridad a nivel de fila y autenticación segura."
+      },
+      "whoHasAccess": {
+        "title": "Quién Tiene Acceso",
+        "content": "Solo Olívia y Esteban (la pareja) tienen acceso administrativo a los datos de los invitados. Tu información nunca será compartida, vendida ni divulgada a terceros."
+      },
+      "yourRights": {
+        "title": "Tus Derechos",
+        "content": "Puedes actualizar tu RSVP e información personal en cualquier momento a través del sitio web. Si deseas solicitar la eliminación de tus datos, contáctanos directamente."
+      },
+      "dataRetention": {
+        "title": "Retención de Datos",
+        "content": "Todos los datos personales recopilados a través de este sitio web serán eliminados permanentemente después de la boda y cualquier comunicación de seguimiento relacionada."
+      },
+      "contact": {
+        "title": "Contáctanos",
+        "content": "Si tienes alguna pregunta sobre cómo se manejan tus datos, no dudes en escribirnos a oliviaestebanr@gmail.com."
+      }
+    }
   }
 }

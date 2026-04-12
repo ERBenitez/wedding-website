@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSupabase } from "@/contexts/SupabaseContext";
 import {
@@ -627,6 +627,15 @@ function RSVPContent() {
                       : t("rsvp.submit")}
                 </button>
               </div>
+
+              <p className="text-xs text-gray-500 dark:text-gray-500 text-center pt-2">
+                <Trans
+                  i18nKey="rsvp.privacyNotice"
+                  components={{
+                    1: <a href="/privacy" className="underline hover:text-indigo dark:hover:text-pink" />,
+                  }}
+                />
+              </p>
             </form>
           )}
         </motion.div>

@@ -157,27 +157,38 @@
   }
   
   .glass-card {
-    @apply rounded-xl p-6;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  .dark .glass-card {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
+  @apply rounded-xl p-6;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.dark .glass-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
   
   .starfield-bg {
-    background-image: 
-      radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-      radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-      radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
-      radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
-      radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
-    background-repeat: repeat;
-    background-size: 200px 200px;
-  }
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(0,0,0,0.35), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, rgba(0,0,0,0.4), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 50px 160px, rgba(0,0,0,0.3), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 90px 40px, rgba(0,0,0,0.38), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 80px, rgba(0,0,0,0.4), rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+.dark .starfield-bg {
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.7), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 50px 160px, rgba(255,255,255,0.6), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 90px 40px, rgba(255,255,255,0.75), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.8), rgba(0,0,0,0));
+}
   
   .text-gradient {
   @apply bg-clip-text text-transparent;
