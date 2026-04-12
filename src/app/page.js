@@ -116,12 +116,12 @@ function HomeContent() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-600 dark:text-gray-400">
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-indigo dark:text-pink" />
-                <span>September 5, 2026</span>
+                <span>{t("home.weddingDate")}</span>
               </div>
               <span className="hidden sm:inline">|</span>
               <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-indigo dark:text-pink" />
-                <span>Brasília, Brazil</span>
+                <span>{t("home.weddingLocation")}</span>
               </div>
             </div>
           </motion.div>
@@ -173,18 +173,18 @@ function HomeContent() {
 
               <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-sm text-gray-500 dark:text-gray-500">
-                  Reserved spots:{" "}
+                  {t("home.reservedSpots")}{" "}
                   <span className="font-bold text-indigo dark:text-pink">
                     {guest.reserved_spots}
                   </span>
                 </p>
                 {guest.rsvp !== null && (
                   <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                    RSVP Status:{" "}
+                    {t("home.rsvpStatus")}{" "}
                     <span
                       className={`font-bold ${guest.rsvp ? "text-green-500" : "text-red-500"}`}
                     >
-                      {guest.rsvp ? "Confirmed" : "Declined"}
+                      {guest.rsvp ? t("home.confirmed") : t("home.declined")}
                     </span>
                   </p>
                 )}
@@ -202,7 +202,7 @@ function HomeContent() {
               )}
 
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-indigo dark:text-pink">
-                Welcome to Our Wedding
+                {t("home.publicWelcome")}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
                 {t("home.usePersonalLink")}
@@ -225,32 +225,32 @@ function HomeContent() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-indigo dark:text-pink">
-            The Details
+            {t("home.details")}
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: Church,
-                title: "Ceremony",
-                content: "Santuário Santo Antônio\n4:30 PM\nBrasília, Brazil",
+                titleKey: "home.ceremony",
+                contentKey: "home.ceremonyContent",
                 link: "https://www.google.com/maps/place/Santuário+Santo+Antônio/data=!4m2!3m1!1s0x0:0x1d5df1a5fdeca27e?sa=X&ved=1t:2428&ictx=111",
               },
               {
                 icon: Cake,
-                title: "Celebration",
-                content: "Porto Cristal Eventos\n7:00 PM\nBrasília, Brazil",
+                titleKey: "home.celebration",
+                contentKey: "home.celebrationContent",
                 link: "https://www.google.com/maps/place/Crystal+Harbor+Events/@-15.8506642,-48.0114984,15z/data=!3m1!4b1!4m6!3m5!1s0x935a2e07585aed5b:0x103df11782ca6dfa!8m2!3d-15.8506851!4d-48.0012201!16s%2Fg%2F1s04g97zm?entry=ttu&g_ep=EgoyMDI2MDMyMi4wIKXMDSoASAFQAw%3D%3D",
               },
               {
                 icon: Shirt,
-                title: "Dress Code",
-                content: "Star Wars Black Tie",
+                titleKey: "home.dressCode",
+                contentKey: "home.dressCodeContent",
                 link: null,
               },
             ].map((item, index) => (
               <motion.div
-                key={item.title}
+                key={item.titleKey}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -265,10 +265,10 @@ function HomeContent() {
                   </div>
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-gray-200">
-                  {item.title}
+                  {t(item.titleKey)}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                  {item.content}
+                  {t(item.contentKey)}
                 </p>
               </motion.div>
             ))}
