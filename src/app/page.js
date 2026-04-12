@@ -5,13 +5,15 @@ import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { getGuestByUrlCode } from "@/lib/supabase";
+import { getGuestByUrlCode, getGuestByEmail } from "@/lib/supabase";
+import { useSupabase } from "@/contexts/SupabaseContext";
 import { LightsaberDivider } from "@/components/LightsaberDivider";
 import { Calendar, MapPin, Heart, Church, Shirt, PartyPopper, Cake } from "lucide-react";
 
 function HomeContent() {
   const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
+  const { user } = useSupabase();
 
   const rawCode = useMemo(() => searchParams.get("code"), [searchParams]);
   const [urlCode, setUrlCode] = useState(undefined);
@@ -39,13 +41,26 @@ function HomeContent() {
 
     async function loadGuest() {
       if (urlCode === undefined) return;
-      if (!urlCode) {
-        setLoading(false);
-        return;
-      }
 
       try {
-        const guestData = await getGuestByUrlCode(urlCode);
+        let guestData = null;
+
+        // Try URL code first
+        if (urlCode) {
+          guestData = await getGuestByUrlCode(urlCode);
+        }
+
+        // Fallback: if no URL code or not found, try authenticated email
+        if (!guestData && user?.email) {
+          guestData = await getGuestByEmail(user.email);
+          // Store the code in sessionStorage so it persists
+          if (guestData?.url_code) {
+            try {
+              sessionStorage.setItem("guestCode", guestData.url_code);
+            } catch {}
+          }
+        }
+
         if (cancelled) return;
 
         if (guestData) {
@@ -56,7 +71,7 @@ function HomeContent() {
               i18n.changeLanguage(guestData.language);
             }
           }
-        } else {
+        } else if (urlCode) {
           setError("guestNotFound");
         }
       } catch (err) {
@@ -71,7 +86,7 @@ function HomeContent() {
     return () => {
       cancelled = true;
     };
-  }, [urlCode, i18n]);
+  }, [urlCode, user, i18n]);
 
   if (loading) {
     return (
