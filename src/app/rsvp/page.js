@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSupabase } from "@/contexts/SupabaseContext";
 import {
@@ -135,7 +135,7 @@ function RSVPContent() {
         (60000 - (Date.now() - parseInt(lastSent))) / 1000,
       );
       setEmailError(
-        `Please wait ${secondsLeft} seconds before requesting another link.`,
+        t("rsvp.cooldown", { seconds: secondsLeft }),
       );
       return;
     }
@@ -147,7 +147,7 @@ function RSVPContent() {
       const guestData = await getGuestByEmail(email);
       if (!guestData) {
         setEmailError(
-          "Email not found in our guest list. Please use your personal link or contact the couple for assistance.",
+          t("rsvp.emailNotFound"),
         );
         setSendingEmail(false);
         return;
@@ -158,7 +158,7 @@ function RSVPContent() {
       localStorage.setItem("magicLinkLastSent", Date.now().toString());
       setEmailSent(true);
     } catch (err) {
-      setEmailError("Failed to send login link. Please try again.");
+      setEmailError(t("rsvp.sendFailed"));
     }
 
     setSendingEmail(false);
@@ -231,7 +231,7 @@ function RSVPContent() {
                     {t("rsvp.title")}
                   </h1>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Enter your email to access your invitation
+                    {t("rsvp.enterEmail")}
                   </p>
 
                   <form onSubmit={handleEmailSubmit} className="space-y-4">
@@ -260,12 +260,12 @@ function RSVPContent() {
                       {sendingEmail ? (
                         <>
                           <Loader2 className="w-5 h-5 animate-spin" />
-                          Sending...
+                          {t("rsvp.sending")}
                         </>
                       ) : (
                         <>
                           <Mail className="w-5 h-5" />
-                          Send Magic Link
+                          {t("rsvp.sendMagicLink")}
                         </>
                       )}
                     </button>
@@ -274,7 +274,7 @@ function RSVPContent() {
                   {urlCode && (
                     <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                       <p className="text-sm text-gray-500">
-                        Or use your personal link
+                        {t("rsvp.orUsePersonalLink")}
                       </p>
                     </div>
                   )}
@@ -291,11 +291,11 @@ function RSVPContent() {
                   </div>
 
                   <h2 className="text-2xl font-bold text-green-600 mb-4">
-                    Check Your Email!
+                    {t("rsvp.checkEmail")}
                   </h2>
 
                   <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    We&apos;ve sent a magic link to:
+                    {t("rsvp.magicLinkSent")}
                   </p>
 
                   <p className="text-lg font-medium text-indigo dark:text-pink mb-6">
@@ -303,8 +303,7 @@ function RSVPContent() {
                   </p>
 
                   <p className="text-sm text-gray-500">
-                    Click the link in the email to log in. If you don&apos;t see
-                    it, check your spam folder.
+                    {t("rsvp.checkSpam")}
                   </p>
 
                   <button
@@ -315,7 +314,7 @@ function RSVPContent() {
                     className="mt-6 text-sm text-gray-500 hover:text-indigo dark:hover:text-pink flex items-center gap-2 mx-auto"
                   >
                     <ArrowLeft className="w-4 h-4" />
-                    Use a different email
+                    {t("rsvp.differentEmail")}
                   </button>
                 </motion.div>
               )}
@@ -334,12 +333,10 @@ function RSVPContent() {
           <div className="glass-card">
             <AlertCircle className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-              Guest Not Found
+              {t("rsvp.guestNotFound")}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              We couldn&apos;t find an invitation for{" "}
-              <strong>{user.email}</strong>. Please contact the couple or use
-              your personal link.
+              {t("rsvp.guestNotFoundMessage", { email: user.email })}
             </p>
             <button onClick={handleLogout} className="btn-outline">
               {t("rsvp.logout")}
@@ -395,7 +392,7 @@ function RSVPContent() {
                 {t("rsvp.successMessage")}
               </p>
               <p className="text-sm text-gray-500 mt-2">
-                Redirecting to home in {countdown} s
+                {t("rsvp.redirecting", { countdown })}
               </p>
             </motion.div>
           ) : (
@@ -564,7 +561,7 @@ function RSVPContent() {
 
                   <p className="text-xs text-gray-500 mt-3 text-center">
                     {t("rsvp.totalAttending")}: <span className="font-bold text-indigo dark:text-pink">{rsvpCount}</span> / {guest?.reserved_spots}{" "}
-                    {guest?.reserved_spots === 1 ? "person" : "people"}
+                    {guest?.reserved_spots === 1 ? t("rsvp.person") : t("rsvp.people")}
                   </p>
                 </motion.div>
               )}
@@ -572,8 +569,8 @@ function RSVPContent() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   <Mail className="w-4 h-4 inline mr-2" />
-                  Email{" "}
-                  <span className="text-gray-400 font-normal">(optional)</span>
+                  {t("rsvp.emailLabel")}{" "}
+                  <span className="text-gray-400 font-normal">{t("rsvp.emailOptional")}</span>
                 </label>
                 <input
                   type="email"
@@ -583,8 +580,7 @@ function RSVPContent() {
                   className="input-field"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Add your email to be able to log in without your personal
-                  link.
+                  {t("rsvp.emailHelp")}
                 </p>
               </div>
 
@@ -627,6 +623,15 @@ function RSVPContent() {
                       : t("rsvp.submit")}
                 </button>
               </div>
+
+              <p className="text-xs text-gray-500 dark:text-gray-500 text-center pt-2">
+                <Trans
+                  i18nKey="rsvp.privacyNotice"
+                  components={{
+                    1: <a href="/privacy" className="underline hover:text-indigo dark:hover:text-pink" />,
+                  }}
+                />
+              </p>
             </form>
           )}
         </motion.div>

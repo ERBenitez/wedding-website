@@ -12,7 +12,7 @@ const recommendations = [
   {
     id: 1,
     key: "cathedral",
-    name: "Cathedral of Brasília (Catedral Metropolitana)",
+    name: "Catedral Metropolitana de Brasília",
     category: "culture",
     address: "Esplanada dos Ministérios, Brasília",
     website: "https://catedral.org.br",
@@ -21,7 +21,7 @@ const recommendations = [
   {
     id: 2,
     key: "congress",
-    name: "National Congress (Congresso Nacional)",
+    name: "Congesso Nacional",
     category: "culture",
     address: "Praça dos Três Poderes, Brasília",
     website: "https://www.camara.leg.br",
@@ -39,7 +39,7 @@ const recommendations = [
   {
     id: 4,
     key: "parque",
-    name: "Parque da Cidade (City Park)",
+    name: "Parque da Cidade",
     category: "nature",
     address: "SIG, Brasília",
     website: null,
@@ -48,7 +48,7 @@ const recommendations = [
   {
     id: 5,
     key: "nacional",
-    name: "Brasília National Park (Água Mineral)",
+    name: "Parque nacional (Água Mineral)",
     category: "nature",
     address: "DF-001, Brasília",
     website: "https://www.icmbio.gov.br",
@@ -75,7 +75,7 @@ const recommendations = [
   {
     id: 11,
     key: "jardim",
-    name: "Jardim Botânico (Botanical Garden)",
+    name: "Jardim Botânico",
     category: "nature",
     address: "SIG, Brasília",
     website: "https://www.jardimbotanicodebrasilia.df.gov.br",
@@ -84,15 +84,15 @@ const recommendations = [
   {
     id: 12,
     key: "feira",
-    name: "Feira da Torre de TV (TV Tower Fair)",
-    category: "culture",
+    name: "Feira da Torre de TV",
+    category: "food",
     address: "Eixo Monumental, Brasília",
     website: null,
     image: "/images/feira.jpg",
   },
 ];
 
-const categories = ["all", "culture", "nature", "food", "nightlife"];
+const categories = ["all", "culture", "nature", "food"];
 
 function RecommendationCard({ item, index }) {
   const { t } = useTranslation();

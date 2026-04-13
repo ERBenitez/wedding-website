@@ -10,14 +10,14 @@ module.exports = {
     extend: {
       colors: {
         indigo: {
-          DEFAULT: "#2d2f8e",
-          light: "#4a4db5",
-          dark: "#1e2060",
+          DEFAULT: "#2A007F",
+          light: "#8C58F5",
+          dark: "#1A004F",
         },
         pink: {
-          DEFAULT: "#ee9b9b",
-          light: "#f5c4c4",
-          dark: "#d97a7a",
+          DEFAULT: "#D30071",
+          light: "#D692B7",
+          dark: "#A00057",
         },
         gold: {
           DEFAULT: "#d4af37",
