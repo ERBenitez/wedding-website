@@ -245,7 +245,7 @@ function HomeContent() {
               {
                 icon: Shirt,
                 title: "Dress Code",
-                content: "Star Wars Black Tie",
+                content: "Black Tie n/ Coming Soon",
                 link: null,
               },
             ].map((item, index) => (
