@@ -3,6 +3,7 @@ import './globals.css'
 import { Providers } from '@/components/Providers'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
+import { StarfieldBackground } from '@/components/StarfieldBackground'
 import { Dancing_Script, Open_Sans, Cookie } from 'next/font/google'
 
 const dancingScript = Dancing_Script({
@@ -46,7 +47,7 @@ export default function RootLayout({ children }) {
           <div className="min-h-screen flex flex-col relative">
             {/* Global background - covers all pages */}
             <div className="fixed inset-0 -z-10 site-gradient" />
-            <div className="fixed inset-0 -z-10 starfield-bg opacity 10" />
+            <StarfieldBackground />
             <Navigation />
             <main className="flex-grow">
               {children}
