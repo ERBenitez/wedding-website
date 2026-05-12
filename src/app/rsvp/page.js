@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useTranslation, Trans } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +11,7 @@ import {
   updateGuestRSVP,
 } from "@/lib/supabase";
 import { LightsaberDivider } from "@/components/LightsaberDivider";
+import Turnstile from "@/components/Turnstile";
 import {
   Check,
   X,
@@ -63,6 +64,11 @@ function RSVPContent() {
   const [otpCode, setOtpCode] = useState("");
   const [verifyingCode, setVerifyingCode] = useState(false);
   const [otpError, setOtpError] = useState(null);
+
+  // Captcha
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const turnstileRef = useRef(null);
+  const onCaptchaSuccess = useCallback((token) => setCaptchaToken(token), []);
 
   // RSVP form states
   const [rsvp, setRsvp] = useState(null);
@@ -169,11 +175,15 @@ function RSVPContent() {
       }
 
       // Send OTP code
-      await signIn(email);
+      await signIn(email, captchaToken);
       localStorage.setItem("otpLastSent", Date.now().toString());
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
       setEmailSent(true);
     } catch (err) {
       setEmailError(t("rsvp.sendFailed"));
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     }
 
     setSendingEmail(false);
@@ -213,12 +223,16 @@ function RSVPContent() {
     setOtpError(null);
 
     try {
-      await signIn(email);
+      await signIn(email, captchaToken);
       localStorage.setItem("otpLastSent", Date.now().toString());
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
       setOtpCode("");
       setOtpError(t("rsvp.codeResent"));
     } catch (err) {
       setOtpError(t("rsvp.sendFailed"));
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -317,10 +331,12 @@ function RSVPContent() {
                       </div>
                     )}
 
+                    <Turnstile ref={turnstileRef} onSuccess={onCaptchaSuccess} />
+
                     <button
                       type="submit"
-                      disabled={sendingEmail}
-                      className="btn-primary w-full flex items-center justify-center gap-2"
+                      disabled={sendingEmail || !captchaToken}
+                      className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {sendingEmail ? (
                         <>
@@ -407,9 +423,12 @@ function RSVPContent() {
                   </form>
 
                   <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
+                    <Turnstile ref={turnstileRef} onSuccess={onCaptchaSuccess} />
+
                     <button
                       onClick={handleResendCode}
-                      className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink mx-auto block"
+                      disabled={!captchaToken}
+                      className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink mx-auto block disabled:opacity-30"
                     >
                       {t("rsvp.resendCode")}
                     </button>
@@ -420,6 +439,8 @@ function RSVPContent() {
                         setEmail("");
                         setOtpCode("");
                         setOtpError(null);
+                        setCaptchaToken(null);
+                        turnstileRef.current?.reset();
                       }}
                       className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink flex items-center gap-2 mx-auto"
                     >

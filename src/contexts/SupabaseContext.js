@@ -25,8 +25,8 @@ export function SupabaseProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  const signIn = async (email) => {
-    const { error } = await signInWithEmail(email)
+  const signIn = async (email, captchaToken) => {
+    const { error } = await signInWithEmail(email, captchaToken)
     if (error) throw error
   }
 

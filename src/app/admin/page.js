@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,6 +27,7 @@ import {
   Check as CheckIcon,
   KeyRound,
 } from "lucide-react";
+import Turnstile from "@/components/Turnstile";
 
 export default function Admin() {
   const { t } = useTranslation();
@@ -49,6 +50,11 @@ export default function Admin() {
   const [otpCode, setOtpCode] = useState("");
   const [verifyingOtp, setVerifyingOtp] = useState(false);
   const [otpError, setOtpError] = useState(null);
+
+  // Captcha
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const turnstileRef = useRef(null);
+  const onCaptchaSuccess = useCallback((token) => setCaptchaToken(token), []);
 
   // Modal states
   const [showModal, setShowModal] = useState(false);
@@ -111,11 +117,15 @@ export default function Admin() {
     setSendingEmail(true);
 
     try {
-      await signIn(email);
+      await signIn(email, captchaToken);
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
       setEmailSent(true);
     } catch (err) {
       console.error("Error sending code:", err);
       setEmailError("Failed to send code. Please try again.");
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     }
 
     setSendingEmail(false);
@@ -143,11 +153,15 @@ export default function Admin() {
   const handleResendCode = async () => {
     setOtpError(null);
     try {
-      await signIn(email);
+      await signIn(email, captchaToken);
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
       setOtpCode("");
       setOtpError("New code sent!");
     } catch (err) {
       setOtpError("Failed to resend code. Please try again.");
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -302,10 +316,12 @@ export default function Admin() {
                       </div>
                     )}
 
+                    <Turnstile ref={turnstileRef} onSuccess={onCaptchaSuccess} />
+
                     <button
                       type="submit"
-                      disabled={sendingEmail}
-                      className="btn-primary w-full flex items-center justify-center gap-2"
+                      disabled={sendingEmail || !captchaToken}
+                      className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {sendingEmail ? (
                         <>
@@ -384,9 +400,12 @@ export default function Admin() {
                   </form>
 
                   <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
+                    <Turnstile ref={turnstileRef} onSuccess={onCaptchaSuccess} />
+
                     <button
                       onClick={handleResendCode}
-                      className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink mx-auto block"
+                      disabled={!captchaToken}
+                      className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink mx-auto block disabled:opacity-30"
                     >
                       Resend code
                     </button>
@@ -397,6 +416,8 @@ export default function Admin() {
                         setEmail("");
                         setOtpCode("");
                         setOtpError(null);
+                        setCaptchaToken(null);
+                        turnstileRef.current?.reset();
                       }}
                       className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink flex items-center gap-2 mx-auto"
                     >

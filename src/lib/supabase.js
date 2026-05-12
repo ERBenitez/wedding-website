@@ -169,9 +169,15 @@ export async function isAdmin(email) {
 }
 
 // Email authentication functions
-export async function signInWithEmail(email) {
+export async function signInWithEmail(email, captchaToken) {
+  const options = {};
+  if (captchaToken) {
+    options.captchaToken = captchaToken;
+  }
+
   const { data, error } = await supabase.auth.signInWithOtp({
     email,
+    options,
   });
 
   if (error) {
