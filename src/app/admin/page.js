@@ -24,7 +24,6 @@ import {
   Loader2,
   ArrowLeft,
   Copy,
-  Check as CheckIcon,
   KeyRound,
 } from "lucide-react";
 import Turnstile from "@/components/Turnstile";
@@ -593,7 +592,7 @@ export default function Admin() {
                           title="Copy personal link"
                         >
                           {copiedId === guest.id ? (
-                            <CheckIcon className="w-4 h-4 text-green-500" />
+                            <Check className="w-4 h-4 text-green-500" />
                           ) : (
                             <Copy className="w-4 h-4" />
                           )}

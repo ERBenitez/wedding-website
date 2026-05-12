@@ -162,12 +162,14 @@ export function Navigation() {
             </button>
 
             {/* User Menu */}
-            {user && (
+            {hasAccess && (
               <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  <User className="w-4 h-4 inline mr-1" />
-                  {user.email}
-                </span>
+                {user && (
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <User className="w-4 h-4 inline mr-1" />
+                    {user.email}
+                  </span>
+                )}
                 <button
                   onClick={handleLogout}
                   className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-red-500"
@@ -266,11 +268,13 @@ export function Navigation() {
                   </button>
 
                   {/* User Menu */}
-                  {user && (
+                  {hasAccess && (
                     <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        {user.email}
-                      </p>
+                      {user && (
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                          {user.email}
+                        </p>
+                      )}
                       <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 text-red-500 font-medium"

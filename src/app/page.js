@@ -8,7 +8,7 @@ import Link from "next/link";
 import { getGuestByUrlCode, getGuestByEmail } from "@/lib/supabase";
 import { useSupabase } from "@/contexts/SupabaseContext";
 import { LightsaberDivider } from "@/components/LightsaberDivider";
-import { Calendar, MapPin, Heart, Church, Shirt, PartyPopper, Cake } from "lucide-react";
+import { Calendar, MapPin, Heart, Church, Shirt, Cake } from "lucide-react";
 
 function HomeContent() {
   const { t, i18n } = useTranslation();
