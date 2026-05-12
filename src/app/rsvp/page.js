@@ -20,6 +20,7 @@ import {
   Mail,
   Loader2,
   ArrowLeft,
+  KeyRound,
 } from "lucide-react";
 
 function RSVPContent() {
@@ -28,17 +29,23 @@ function RSVPContent() {
   const searchParams = useSearchParams();
 
   const rawCode = searchParams.get("code");
-  const urlCode = (() => {
-    if (rawCode) {
-      sessionStorage.setItem("guestCode", rawCode);
-      return rawCode;
-    }
-    return typeof window !== "undefined"
-      ? sessionStorage.getItem("guestCode")
-      : null;
-  })();
+  const [urlCode, setUrlCode] = useState(undefined);
 
-  const { user, signIn, signOut } = useSupabase();
+  // Read/write sessionStorage only on the client (mirrors home page pattern)
+  useEffect(() => {
+    try {
+      if (rawCode) {
+        sessionStorage.setItem("guestCode", rawCode);
+        setUrlCode(rawCode);
+      } else {
+        setUrlCode(sessionStorage.getItem("guestCode"));
+      }
+    } catch {
+      setUrlCode(rawCode);
+    }
+  }, [rawCode]);
+
+  const { user, signIn, signOut, verifyCode } = useSupabase();
 
   const [guest, setGuest] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,6 +58,11 @@ function RSVPContent() {
   const [emailSent, setEmailSent] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailError, setEmailError] = useState(null);
+
+  // OTP verification states
+  const [otpCode, setOtpCode] = useState("");
+  const [verifyingCode, setVerifyingCode] = useState(false);
+  const [otpError, setOtpError] = useState(null);
 
   // RSVP form states
   const [rsvp, setRsvp] = useState(null);
@@ -80,6 +92,9 @@ function RSVPContent() {
 
   useEffect(() => {
     async function loadGuest() {
+      // Wait until sessionStorage has been checked
+      if (urlCode === undefined) return;
+
       try {
         let guestData = null;
 
@@ -129,7 +144,7 @@ function RSVPContent() {
     e.preventDefault();
 
     // Check cooldown from localStorage
-    const lastSent = localStorage.getItem("magicLinkLastSent");
+    const lastSent = localStorage.getItem("otpLastSent");
     if (lastSent && Date.now() - parseInt(lastSent) < 60000) {
       const secondsLeft = Math.ceil(
         (60000 - (Date.now() - parseInt(lastSent))) / 1000,
@@ -153,15 +168,58 @@ function RSVPContent() {
         return;
       }
 
-      // Send magic link
+      // Send OTP code
       await signIn(email);
-      localStorage.setItem("magicLinkLastSent", Date.now().toString());
+      localStorage.setItem("otpLastSent", Date.now().toString());
       setEmailSent(true);
     } catch (err) {
       setEmailError(t("rsvp.sendFailed"));
     }
 
     setSendingEmail(false);
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setOtpError(null);
+    setVerifyingCode(true);
+
+    try {
+      await verifyCode(email, otpCode);
+      // On success, onAuthStateChange in the context sets the user,
+      // which triggers the loadGuest effect and re-renders the page.
+    } catch (err) {
+      console.error("OTP verification error:", err);
+      if (err?.message?.includes("expired")) {
+        setOtpError(t("rsvp.otpExpired"));
+      } else {
+        setOtpError(t("rsvp.otpInvalid"));
+      }
+    }
+
+    setVerifyingCode(false);
+  };
+
+  const handleResendCode = async () => {
+    const lastSent = localStorage.getItem("otpLastSent");
+    if (lastSent && Date.now() - parseInt(lastSent) < 60000) {
+      const secondsLeft = Math.ceil(
+        (60000 - (Date.now() - parseInt(lastSent))) / 1000,
+      );
+      setOtpError(t("rsvp.cooldown", { seconds: secondsLeft }));
+      return;
+    }
+
+    setOtpError(null);
+
+    try {
+      await signIn(email);
+      localStorage.setItem("otpLastSent", Date.now().toString());
+      setOtpCode("");
+      setOtpError(t("rsvp.codeResent"));
+    } catch (err) {
+      setOtpError(t("rsvp.sendFailed"));
+    }
   };
 
   const handleRSVPSubmit = async (e) => {
@@ -184,13 +242,20 @@ function RSVPContent() {
       setSuccess(true);
     } catch (err) {
       console.error("Error submitting RSVP:", err);
-      setError("generic");
+      if (err?.code === "23505" || err?.message?.includes("unique") || err?.message?.includes("duplicate")) {
+        setError("emailTaken");
+      } else {
+        setError("generic");
+      }
     }
 
     setSubmitting(false);
   };
 
   const handleLogout = async () => {
+    try { sessionStorage.removeItem("guestCode"); } catch {}
+    setGuest(null);
+    setUrlCode(null);
     await signOut();
     router.push("/");
   };
@@ -265,7 +330,7 @@ function RSVPContent() {
                       ) : (
                         <>
                           <Mail className="w-5 h-5" />
-                          {t("rsvp.sendMagicLink")}
+                          {t("rsvp.sendCode")}
                         </>
                       )}
                     </button>
@@ -281,41 +346,91 @@ function RSVPContent() {
                 </motion.div>
               ) : (
                 <motion.div
-                  key="email-sent"
+                  key="otp-verify"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="py-8"
                 >
-                  <div className="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Mail className="w-10 h-10 text-green-600" />
+                  <div className="w-16 h-16 bg-indigo/10 dark:bg-pink/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <KeyRound className="w-8 h-8 text-indigo dark:text-pink" />
                   </div>
 
-                  <h2 className="text-2xl font-bold text-green-600 mb-4">
-                    {t("rsvp.checkEmail")}
+                  <h2 className="text-2xl font-bold text-indigo dark:text-pink mb-2">
+                    {t("rsvp.enterCode")}
                   </h2>
 
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    {t("rsvp.magicLinkSent")}
+                  <p className="text-gray-600 dark:text-gray-400 mb-2">
+                    {t("rsvp.codeSentTo")}
                   </p>
 
                   <p className="text-lg font-medium text-indigo dark:text-pink mb-6">
                     {email}
                   </p>
 
-                  <p className="text-sm text-gray-500">
+                  <form onSubmit={handleVerifyOtp} className="space-y-4">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={6}
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                      placeholder="000000"
+                      required
+                      className="input-field text-center text-2xl tracking-[0.5em] font-mono"
+                    />
+
+                    {otpError && (
+                      <div className={`p-3 rounded-lg text-sm ${
+                        otpError === t("rsvp.codeResent")
+                          ? "bg-green-50 dark:bg-green-900/20 text-green-600"
+                          : "bg-red-50 dark:bg-red-900/20 text-red-600"
+                      }`}>
+                        {otpError}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={otpCode.length < 6 || verifyingCode}
+                      className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {verifyingCode ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          {t("rsvp.verifying")}
+                        </>
+                      ) : (
+                        t("rsvp.verifyCode")
+                      )}
+                    </button>
+                  </form>
+
+                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
+                    <button
+                      onClick={handleResendCode}
+                      className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink mx-auto block"
+                    >
+                      {t("rsvp.resendCode")}
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setEmailSent(false);
+                        setEmail("");
+                        setOtpCode("");
+                        setOtpError(null);
+                      }}
+                      className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink flex items-center gap-2 mx-auto"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      {t("rsvp.differentEmail")}
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-gray-400 mt-4">
                     {t("rsvp.checkSpam")}
                   </p>
-
-                  <button
-                    onClick={() => {
-                      setEmailSent(false);
-                      setEmail("");
-                    }}
-                    className="mt-6 text-sm text-gray-500 hover:text-indigo dark:hover:text-pink flex items-center gap-2 mx-auto"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    {t("rsvp.differentEmail")}
-                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -606,7 +721,9 @@ function RSVPContent() {
 
               {error && (
                 <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600 text-sm">
-                  {t("rsvp.errorMessage")}
+                  {error === "emailTaken"
+                    ? t("rsvp.emailTaken")
+                    : t("rsvp.errorMessage")}
                 </div>
               )}
 

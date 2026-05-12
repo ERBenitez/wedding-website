@@ -69,6 +69,7 @@ export function Navigation() {
 
   const handleLogout = async () => {
     setMobileMenuOpen(false);
+    try { sessionStorage.removeItem("guestCode"); } catch {}
     await signOut();
     window.location.href = "/";
   };
@@ -151,7 +152,9 @@ export function Navigation() {
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label={t("navigation.theme")}
             >
-              {isDark ? (
+              {!mounted ? (
+                <div className="w-5 h-5" />
+              ) : isDark ? (
                 <Sun className="w-5 h-5 text-gold" />
               ) : (
                 <Moon className="w-5 h-5 text-indigo" />
@@ -244,7 +247,12 @@ export function Navigation() {
                     }}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600"
                   >
-                    {isDark ? (
+                    {!mounted ? (
+                      <>
+                        <div className="w-4 h-4" />
+                        <span>Theme</span>
+                      </>
+                    ) : isDark ? (
                       <>
                         <Sun className="w-4 h-4" />
                         <span>Light</span>

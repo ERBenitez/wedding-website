@@ -25,12 +25,13 @@ import {
   ArrowLeft,
   Copy,
   Check as CheckIcon,
+  KeyRound,
 } from "lucide-react";
 
 export default function Admin() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { user, signIn, signOut } = useSupabase();
+  const { user, signIn, signOut, verifyCode } = useSupabase();
   const [copiedId, setCopiedId] = useState(null);
 
   const [guests, setGuests] = useState([]);
@@ -42,6 +43,12 @@ export default function Admin() {
   const [email, setEmail] = useState("");
   const [emailSent, setEmailSent] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailError, setEmailError] = useState(null);
+
+  // OTP verification states
+  const [otpCode, setOtpCode] = useState("");
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [otpError, setOtpError] = useState(null);
 
   // Modal states
   const [showModal, setShowModal] = useState(false);
@@ -100,16 +107,55 @@ export default function Admin() {
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
+    setEmailError(null);
     setSendingEmail(true);
 
     try {
       await signIn(email);
       setEmailSent(true);
     } catch (err) {
-      console.error("Error sending magic link:", err);
+      console.error("Error sending code:", err);
+      setEmailError("Failed to send code. Please try again.");
     }
 
     setSendingEmail(false);
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setOtpError(null);
+    setVerifyingOtp(true);
+
+    try {
+      await verifyCode(email, otpCode);
+    } catch (err) {
+      console.error("OTP verification error:", err);
+      if (err?.message?.includes("expired")) {
+        setOtpError("Code expired. Please request a new one.");
+      } else {
+        setOtpError("Invalid code. Please check and try again.");
+      }
+    }
+
+    setVerifyingOtp(false);
+  };
+
+  const handleResendCode = async () => {
+    setOtpError(null);
+    try {
+      await signIn(email);
+      setOtpCode("");
+      setOtpError("New code sent!");
+    } catch (err) {
+      setOtpError("Failed to resend code. Please try again.");
+    }
+  };
+
+  const handleLogout = async () => {
+    setIsAuthorized(false);
+    setGuests([]);
+    try { sessionStorage.removeItem("guestCode"); } catch {}
+    await signOut();
   };
 
   const handleAddGuest = () => {
@@ -250,6 +296,12 @@ export default function Admin() {
                       />
                     </div>
 
+                    {emailError && (
+                      <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600 text-sm">
+                        {emailError}
+                      </div>
+                    )}
+
                     <button
                       type="submit"
                       disabled={sendingEmail}
@@ -263,7 +315,7 @@ export default function Admin() {
                       ) : (
                         <>
                           <Mail className="w-5 h-5" />
-                          Send Magic Link
+                          Send Login Code
                         </>
                       )}
                     </button>
@@ -271,41 +323,91 @@ export default function Admin() {
                 </motion.div>
               ) : (
                 <motion.div
-                  key="email-sent"
+                  key="otp-verify"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="py-8"
                 >
-                  <div className="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Mail className="w-10 h-10 text-green-600" />
+                  <div className="w-16 h-16 bg-indigo/10 dark:bg-pink/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <KeyRound className="w-8 h-8 text-indigo dark:text-pink" />
                   </div>
 
-                  <h2 className="text-2xl font-bold text-green-600 mb-4">
-                    Check Your Email!
+                  <h2 className="text-2xl font-bold text-indigo dark:text-pink mb-2">
+                    Enter Your Code
                   </h2>
 
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    We&apos;ve sent a magic link to:
+                  <p className="text-gray-600 dark:text-gray-400 mb-2">
+                    We sent a 6-digit code to:
                   </p>
 
                   <p className="text-lg font-medium text-indigo dark:text-pink mb-6">
                     {email}
                   </p>
 
-                  <p className="text-sm text-gray-500">
-                    Click the link in the email to log in.
-                  </p>
+                  <form onSubmit={handleVerifyOtp} className="space-y-4">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={6}
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                      placeholder="000000"
+                      required
+                      className="input-field text-center text-2xl tracking-[0.5em] font-mono"
+                    />
 
-                  <button
-                    onClick={() => {
-                      setEmailSent(false);
-                      setEmail("");
-                    }}
-                    className="mt-6 text-sm text-gray-500 hover:text-indigo dark:hover:text-pink flex items-center gap-2 mx-auto"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    Use a different email
-                  </button>
+                    {otpError && (
+                      <div className={`p-3 rounded-lg text-sm ${
+                        otpError === "New code sent!"
+                          ? "bg-green-50 dark:bg-green-900/20 text-green-600"
+                          : "bg-red-50 dark:bg-red-900/20 text-red-600"
+                      }`}>
+                        {otpError}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={otpCode.length < 6 || verifyingOtp}
+                      className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {verifyingOtp ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Verifying...
+                        </>
+                      ) : (
+                        "Verify & Login"
+                      )}
+                    </button>
+                  </form>
+
+                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
+                    <button
+                      onClick={handleResendCode}
+                      className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink mx-auto block"
+                    >
+                      Resend code
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setEmailSent(false);
+                        setEmail("");
+                        setOtpCode("");
+                        setOtpError(null);
+                      }}
+                      className="text-sm text-gray-500 hover:text-indigo dark:hover:text-pink flex items-center gap-2 mx-auto"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      Use a different email
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-gray-400 mt-4">
+                    If you don&apos;t see the email, check your spam folder.
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -331,7 +433,7 @@ export default function Admin() {
             <p className="text-sm text-gray-500 mb-4">
               Signed in as: {user.email}
             </p>
-            <button onClick={signOut} className="btn-outline">
+            <button onClick={handleLogout} className="btn-outline">
               {t("common.logout")}
             </button>
           </div>
@@ -625,7 +727,7 @@ export default function Admin() {
                     className="input-field"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Required for email login. Guest will receive magic link at
+                    Required for email login. Guest will receive a login code at
                     this address.
                   </p>
                 </div>

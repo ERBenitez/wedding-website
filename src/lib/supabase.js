@@ -172,13 +172,10 @@ export async function isAdmin(email) {
 export async function signInWithEmail(email) {
   const { data, error } = await supabase.auth.signInWithOtp({
     email,
-    options: {
-      emailRedirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`,
-    },
   });
 
   if (error) {
-    console.error("Error sending magic link:", error);
+    console.error("Error sending OTP:", error);
     throw error;
   }
 
@@ -186,16 +183,25 @@ export async function signInWithEmail(email) {
 }
 
 export async function verifyOtp(email, token) {
+  // Try "email" type first (returning users)
   const { data, error } = await supabase.auth.verifyOtp({
     email,
     token,
     type: "email",
   });
 
-  if (error) {
-    console.error("Error verifying OTP:", error);
-    throw error;
-  }
+  if (!error) return data;
 
-  return data;
+  // If that fails, try "signup" type (new users)
+  const { data: signupData, error: signupError } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "signup",
+  });
+
+  if (!signupError) return signupData;
+
+  // Both failed — throw the original error
+  console.error("Error verifying OTP:", error);
+  throw error;
 }
