@@ -127,7 +127,7 @@ export async function updateGuest(guestId, guestData) {
     .from("guests")
     .update({
       name: guestData.name,
-      email: guestData.email,
+      email: guestData.email || null,
       reserved_spots: guestData.reservedSpots,
       updated_at: new Date().toISOString(),
     })
