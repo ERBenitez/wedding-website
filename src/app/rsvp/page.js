@@ -533,6 +533,11 @@ function RSVPContent() {
             </motion.div>
           ) : (
             <form onSubmit={handleRSVPSubmit} className="space-y-6">
+              {/* Deadline notice */}
+              <p className="text-sm text-center text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg px-4 py-2">
+                {t("rsvp.deadline")}
+              </p>
+
               {/* RSVP Response */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">

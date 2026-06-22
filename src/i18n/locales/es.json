@@ -96,7 +96,8 @@
     "emailNotFound": "Correo no encontrado en nuestra lista de invitados. Por favor, usa tu enlace personal o contacta a la pareja.",
     "sendFailed": "Error al enviar el enlace. Por favor, inténtalo de nuevo.",
     "cooldown": "Por favor, espera {{seconds}} segundos antes de solicitar otro enlace.",
-    "emailTaken": "Este correo ya está asociado con otro invitado. Por favor, usa un correo diferente o déjalo en blanco."
+    "emailTaken": "Este correo ya está asociado con otro invitado. Por favor, usa un correo diferente o déjalo en blanco.",
+    "deadline": "Por favor, confirma tu asistencia antes del 20 de julio de 2026."
   },
   "brasilia": {
     "title": "Descubre Brasília",
