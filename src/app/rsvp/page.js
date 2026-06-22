@@ -534,7 +534,7 @@ function RSVPContent() {
           ) : (
             <form onSubmit={handleRSVPSubmit} className="space-y-6">
               {/* Deadline notice */}
-              <p className="text-sm text-center text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg px-4 py-2">
+              <p className="text-sm text-center text-amber-600 dark:text-amber-400">
                 {t("rsvp.deadline")}
               </p>
 
