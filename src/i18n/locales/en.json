@@ -46,7 +46,9 @@
     "celebration": "Celebration",
     "celebrationContent": "Porto Cristal Eventos\n7:00 PM\nBrasília, Brazil",
     "dressCode": "Dress Code",
-    "dressCodeContent": "Formal"
+    "dressCodeContent": "Formal",
+    "gifts": "Gifts",
+    "giftsContent": "Your presence is the greatest gift! As we cannot take physical gifts home, we would be grateful for a contribution via PIX  to the email oliviarguimaraes@gmail.com or in cash at the venue."
   },
   "rsvp": {
     "title": "Join the Rebellion",
@@ -97,7 +99,7 @@
     "sendFailed": "Failed to send login link. Please try again.",
     "cooldown": "Please wait {{seconds}} seconds before requesting another link.",
     "emailTaken": "This email is already associated with another guest. Please use a different email or leave it blank.",
-    "deadline": "Please confirm your attendance by July 20, 2026."
+    "deadline": "Please confirm your attendance by July 31, 2026."
   },
   "brasilia": {
     "title": "Discover Brasília",

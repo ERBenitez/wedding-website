@@ -46,7 +46,9 @@
     "celebration": "Celebração",
     "celebrationContent": "Porto Cristal Eventos\n7:00 PM\nBrasília, Brasil",
     "dressCode": "Traje",
-    "dressCodeContent": "Esporte Fino"
+    "dressCodeContent": "Esporte Fino",
+    "gifts": "Presentes",
+    "giftsContent": "Sua presença é o melhor presente! Como não podemos levar presentes físicos para casa, agradeceríamos qualquer contribuição via PIX para a chave oliviarguimaraes@gmail.com."
   },
   "rsvp": {
     "title": "Junte-se à Rebelião",
@@ -97,7 +99,7 @@
     "sendFailed": "Falha ao enviar o link. Por favor, tente novamente.",
     "cooldown": "Por favor, aguarde {{seconds}} segundos antes de solicitar outro link.",
     "emailTaken": "Este e-mail já está associado a outro convidado. Por favor, use um e-mail diferente ou deixe em branco.",
-    "deadline": "Por favor, confirme sua presença até 20 de julho de 2026."
+    "deadline": "Por favor, confirme sua presença até 31 de julho de 2026."
   },
   "brasilia": {
     "title": "Descubra Brasília",

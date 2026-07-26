@@ -46,7 +46,9 @@
     "celebration": "Celebración",
     "celebrationContent": "Porto Cristal Eventos\n7:00 PM\nBrasilia, Brasil",
     "dressCode": "Código de Vestimenta",
-    "dressCodeContent": "Formal"
+    "dressCodeContent": "Formal",
+    "gifts": "Regalos",
+    "giftsContent": "¡Tu presencia es el mejor regalo! Como no podemos llevar regalos físicos a casa, agradeceríamos una contribución en regalo de sobre."
   },
   "rsvp": {
     "title": "Únete a la Rebelión",
@@ -97,7 +99,7 @@
     "sendFailed": "Error al enviar el enlace. Por favor, inténtalo de nuevo.",
     "cooldown": "Por favor, espera {{seconds}} segundos antes de solicitar otro enlace.",
     "emailTaken": "Este correo ya está asociado con otro invitado. Por favor, usa un correo diferente o déjalo en blanco.",
-    "deadline": "Por favor, confirma tu asistencia antes del 20 de julio de 2026."
+    "deadline": "Por favor, confirma tu asistencia antes del 31 de julio de 2026."
   },
   "brasilia": {
     "title": "Descubre Brasília",
