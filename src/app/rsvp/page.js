@@ -4,11 +4,13 @@ import { Suspense, useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useTranslation, Trans } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { useSupabase } from "@/contexts/SupabaseContext";
 import {
   getGuestByUrlCode,
   getGuestByEmail,
   updateGuestRSVP,
+  isAdmin,
 } from "@/lib/supabase";
 import { LightsaberDivider } from "@/components/LightsaberDivider";
 import Turnstile from "@/components/Turnstile";
@@ -46,13 +48,43 @@ function RSVPContent() {
     }
   }, [rawCode]);
 
-  const { user, signIn, signOut, verifyCode } = useSupabase();
+  const { user, signIn, signOut, verifyCode, loading: authLoading } = useSupabase();
 
   const [guest, setGuest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const [adminChecked, setAdminChecked] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function checkAdmin() {
+      if (authLoading) return;
+
+      if (!user?.email) {
+        if (!cancelled) {
+          setIsAdminUser(false);
+          setAdminChecked(true);
+        }
+        return;
+      }
+
+      const adminStatus = await isAdmin(user.email);
+      if (!cancelled) {
+        setIsAdminUser(adminStatus);
+        setAdminChecked(true);
+      }
+    }
+
+    checkAdmin();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, authLoading]);
 
   // Email login states
   const [email, setEmail] = useState("");
@@ -274,11 +306,33 @@ function RSVPContent() {
     router.push("/");
   };
 
-  if (loading) {
+  if (loading || !adminChecked) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-indigo dark:text-pink">
           {t("common.loading")}
+        </div>
+      </div>
+    );
+  }
+
+  // RSVP page is hidden from non-admins now that the deadline has passed
+  if (!isAdminUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md mx-auto text-center">
+          <div className="glass-card">
+            <AlertCircle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
+              {t("rsvp.closedTitle")}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              {t("rsvp.deadlinePassed")}
+            </p>
+            <Link href="/" className="btn-primary inline-flex items-center justify-center gap-2">
+              {t("common.back")}
+            </Link>
+          </div>
         </div>
       </div>
     );
