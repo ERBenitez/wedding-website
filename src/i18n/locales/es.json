@@ -99,9 +99,7 @@
     "sendFailed": "Error al enviar el enlace. Por favor, inténtalo de nuevo.",
     "cooldown": "Por favor, espera {{seconds}} segundos antes de solicitar otro enlace.",
     "emailTaken": "Este correo ya está asociado con otro invitado. Por favor, usa un correo diferente o déjalo en blanco.",
-    "deadline": "Por favor, confirma tu asistencia antes del 31 de julio de 2026.",
-    "closedTitle": "RSVP Cerrado",
-    "deadlinePassed": "La fecha límite de RSVP ha pasado, por favor contacta directamente a los novios para cualquier modificación"
+    "deadline": "Por favor, confirma tu asistencia antes del 31 de julio de 2026."
   },
   "brasilia": {
     "title": "Descubre Brasília",

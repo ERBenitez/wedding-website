@@ -99,9 +99,7 @@
     "sendFailed": "Falha ao enviar o link. Por favor, tente novamente.",
     "cooldown": "Por favor, aguarde {{seconds}} segundos antes de solicitar outro link.",
     "emailTaken": "Este e-mail já está associado a outro convidado. Por favor, use um e-mail diferente ou deixe em branco.",
-    "deadline": "Por favor, confirme sua presença até 31 de julho de 2026.",
-    "closedTitle": "Confirmacões encerradas",
-    "deadlinePassed": "O prazo para confirmacão já acabou, entre em contato diretamente com os noivos para qualquer modificação"
+    "deadline": "Por favor, confirme sua presença até 31 de julho de 2026."
   },
   "brasilia": {
     "title": "Descubra Brasília",

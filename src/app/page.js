@@ -1,11 +1,11 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import { getGuestByUrlCode, getGuestByEmail, isAdmin } from "@/lib/supabase";
+import { getGuestByUrlCode, getGuestByEmail } from "@/lib/supabase";
 import { useSupabase } from "@/contexts/SupabaseContext";
 import { LightsaberDivider } from "@/components/LightsaberDivider";
 import { Calendar, MapPin, Heart, Church, Shirt, Cake } from "lucide-react";
@@ -13,7 +13,6 @@ import { Calendar, MapPin, Heart, Church, Shirt, Cake } from "lucide-react";
 function HomeContent() {
   const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const { user } = useSupabase();
 
   const rawCode = useMemo(() => searchParams.get("code"), [searchParams]);
@@ -36,35 +35,6 @@ function HomeContent() {
   const [guest, setGuest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isAdminUser, setIsAdminUser] = useState(false);
-  const [showRsvpClosedMessage, setShowRsvpClosedMessage] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function checkAdmin() {
-      if (!user?.email) {
-        if (!cancelled) setIsAdminUser(false);
-        return;
-      }
-      const adminStatus = await isAdmin(user.email);
-      if (!cancelled) setIsAdminUser(adminStatus);
-    }
-
-    checkAdmin();
-    return () => {
-      cancelled = true;
-    };
-  }, [user]);
-
-  const handleViewRSVP = () => {
-    if (isAdminUser) {
-      router.push(`/rsvp?code=${urlCode}`);
-      return;
-    }
-    setShowRsvpClosedMessage(true);
-    setTimeout(() => setShowRsvpClosedMessage(false), 7000);
-  };
 
   useEffect(() => {
     let cancelled = false;
@@ -207,35 +177,14 @@ function HomeContent() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {/* <Link
+                <Link
                   href={`/rsvp?code=${urlCode}`}
                   className="btn-primary inline-flex items-center justify-center gap-2"
                 >
                   <Heart className="w-5 h-5" />
                   {t("home.viewRSVP")}
-                </Link> */}
-                <button
-                  type="button"
-                  onClick={handleViewRSVP}
-                  className="btn-primary inline-flex items-center justify-center gap-2"
-                >
-                  <Heart className="w-5 h-5" />
-                  {t("home.viewRSVP")}
-                </button>
+                </Link>
               </div>
-
-              <AnimatePresence>
-                {showRsvpClosedMessage && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-amber-700 dark:text-amber-400 text-sm"
-                  >
-                    {t("rsvp.deadlinePassed")}
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
               <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-sm text-gray-500 dark:text-gray-500">

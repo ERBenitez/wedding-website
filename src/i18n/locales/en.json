@@ -99,9 +99,7 @@
     "sendFailed": "Failed to send login link. Please try again.",
     "cooldown": "Please wait {{seconds}} seconds before requesting another link.",
     "emailTaken": "This email is already associated with another guest. Please use a different email or leave it blank.",
-    "deadline": "Please confirm your attendance by July 31, 2026.",
-    "closedTitle": "RSVP Closed",
-    "deadlinePassed": "RSVP deadline has passed, please contact the couple directly for any modifications"
+    "deadline": "Please confirm your attendance by July 31, 2026."
   },
   "brasilia": {
     "title": "Discover Brasília",
